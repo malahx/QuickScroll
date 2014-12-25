@@ -18,7 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #### What is it?
 
-QuickScroll is a small plugin which adds the possibility to scroll the parts pages on the editor with the mouse wheel.
+QuickScroll is a small plugin which adds the possibility to scroll the parts pages, the categories and the filters on the editor with the mouse wheel.
+
+Shortcut:
+    - When the mouse is on the part list:
+        * Left CTRL + mouse wheel = scroll categories,
+        * Left Shift + mouse wheel = scroll filters.
+    - When the mouse is on the categories:
+        * Left Shift or Left CTRL + mouse wheel = scroll filters.
+
+You can change these Keys on the file: GameData/QuickScroll/PluginData/QuickScroll/Config.txt
 
 I suggest you to look at the awesome mod PartCatalog which also has this feature (with many others nice features).
 
@@ -32,26 +41,33 @@ Delete the QuickScroll folder in your KSP/GameData folder.
 
 #### Changelog
 
+v1.00 - 2014.12.25
+- New: Added a scroll on the categories buttons,
+- New: Added a scroll on the filters buttons,
+- New: Added a config file for the Key modifier.
+
 v0.10 - 2014.12.21
 Initial release
+
+#### Planned updates/new features
+
+Correct the stock scrolling when there is many categories/filters.
 
 #### Troubleshooting?
 
 This mod will not work well with PartCatalog, with it, you need to uninstall QuickScroll (which will be useless).
 
-#### Planned updates/new features
-
-- Add a scroll on the categories buttons,
-- Add a scroll on the filters buttons.
-
 #### Thanks!
 
-to BlackNecro for his awesome PartCatalog mod,
-to all mods developers which make this game really huge,
-to my friend Neimad who corrects my bad english ...
-to Squad for this awesome game.
+- to BlackNecro for his awesome PartCatalog mod,
+- to all mods developers which make this game really huge,
+- to my friend Neimad who corrects my bad english ...
+- to Squad for this awesome game.
 
 #### Links
 
-https://github.com/malahx/QuickScroll
-PartCatalog: http://forum.kerbalspaceprogram.com/threads/35018
+- http://forum.kerbalspaceprogram.com/threads/95168
+- https://kerbalstuff.com/mod/436/QuickScroll
+- http://kerbal.curseforge.com/ksp-mods/226335-quickscroll
+- https://github.com/malahx/QuickScroll
+- PartCatalog: http://forum.kerbalspaceprogram.com/threads/35018

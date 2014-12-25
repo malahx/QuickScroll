@@ -8,6 +8,7 @@
     <RootNamespace>QuickScroll</RootNamespace>
     <AssemblyName>QuickScroll</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <ReleaseVersion>1.00</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,6 +50,8 @@
     <Folder Include="GameData\" />
     <Folder Include="GameData\QuickScroll\" />
     <Folder Include="GameData\QuickScroll\Plugins\" />
+    <Folder Include="GameData\QuickScroll\PluginData\" />
+    <Folder Include="GameData\QuickScroll\PluginData\QuickScroll\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GameData\QuickScroll\COPYING" />
@@ -58,5 +61,6 @@
     <None Include="QuickScroll.version" />
     <None Include="README.md" />
     <None Include="GameData\QuickScroll\QuickScroll.version" />
+    <None Include="GameData\QuickScroll\PluginData\QuickScroll\Config.txt" />
   </ItemGroup>
 </Project>
