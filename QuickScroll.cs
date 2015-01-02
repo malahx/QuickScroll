@@ -1,6 +1,6 @@
 ﻿/* 
 QuickScroll
-Copyright 2014 Malah
+Copyright 2015 Malah
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ namespace QuickScroll {
 	[KSPAddon(KSPAddon.Startup.EditorAny, false)]
 	public class QuickScroll : MonoBehaviour {
 
-		public static string VERSION = "1.00";
+		public static string VERSION = "1.01";
 		public static string MOD = "QuickScroll";
 
 		private static bool isdebug = true;
@@ -148,6 +148,9 @@ namespace QuickScroll {
 					if (EditorPanels.Instance.IsMouseOver ()) {
 						float _scroll = Input.GetAxis ("Mouse ScrollWheel");
 						if (_scroll != 0) {
+							if (PartListTooltips.fetch.displayTooltip) {
+								PartListTooltips.fetch.HideTooltip ();
+							}
 							Vector2 _mouse = Mouse.screenPos;
 							if (EditorLogic.Mode == EditorLogic.EditorModes.SIMPLE) {
 								if (((Input.GetKey (KeyFilter) || Input.GetKey (KeyCategory)) && ScrollRect_Simple [0].Contains (_mouse)) || (Input.GetKey (KeyFilter) && ScrollRect_Simple [1].Contains (_mouse))) {

@@ -1,6 +1,6 @@
 ﻿#### QuickScroll
 #### A plugin for Kerbal Space Program 0.90.0
-#### Copyright 2014 Malah
+#### Copyright 2015 Malah
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,13 +41,16 @@ Delete the QuickScroll folder in your KSP/GameData folder.
 
 #### Changelog
 
+v1.01 - 2015.01.02
+- Fix: Hide the part tool tip on scroll.
+
 v1.00 - 2014.12.25
 - New: Added a scroll on the categories buttons,
 - New: Added a scroll on the filters buttons,
 - New: Added a config file for the Key modifier.
 
 v0.10 - 2014.12.21
-Initial release
+- Initial release
 
 #### Planned updates/new features
 
