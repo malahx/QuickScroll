@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #### What is it?
 
-QuickScroll is a small plugin which adds the possibility to scroll the parts pages, the categories and the filters on the editor with the mouse wheel.
+QuickScroll is a small plugin which adds the possibility to scroll the parts pages, the categories and the filters on the editor with the mouse wheel and with keyboard shortcuts.
 
 Shortcut:
     - When the mouse is on the part list:
@@ -26,8 +26,12 @@ Shortcut:
         * Left Shift + mouse wheel = scroll filters.
     - When the mouse is on the categories:
         * Left Shift or Left CTRL + mouse wheel = scroll filters.
+    - Switch the default categories with Enter + KeyPad 1, KeyPad 2, KeyPad 3 ...
+	- Previous/next page with Enter + left/right.
+	- Previous/next category Enter + up/down.
+	- Previous/next filter Enter + page up/page down.
 
-You can change these Keys on the file: GameData/QuickScroll/PluginData/QuickScroll/Config.txt
+You can change these Keys on the file: GameData/QuickScroll/Config.txt
 
 I suggest you to look at the awesome mod PartCatalog which also has this feature (with many others nice features).
 
@@ -40,6 +44,13 @@ Unzip all files. Put the QuickScroll folder in your KSP/GameData folder.
 Delete the QuickScroll folder in your KSP/GameData folder.
 
 #### Changelog
+
+v1.10 - 2015.01.22
+- New: Added enable/disable the mouse wheel scrolling,
+- New: Added enable/disable the shortcuts mouse wheel scrolling,
+- New: Added keyboard shortcuts,
+- New: Added a tweak for the PartListTooltips, with it, the tooltips can't popup until you right click on a part (this feature is disabled by default),
+- Fix: Move the config file to GameData/QuickScroll/Config.txt
 
 v1.01 - 2015.01.02
 - Fix: Hide the part tool tip on scroll.
@@ -54,11 +65,13 @@ v0.10 - 2014.12.21
 
 #### Planned updates/new features
 
-Correct the stock scrolling when there is many categories/filters.
+- Correct the stock scrolling when there is many categories/filters,
+- Added a GUI to edit all the shortcut.
 
 #### Troubleshooting?
 
 This mod will not work well with PartCatalog, with it, you need to uninstall QuickScroll (which will be useless).
+If you want the keyboard shortcut with PartCatalog, you need to disable the mouse wheel scrolling on the config file.
 
 #### Thanks!
 

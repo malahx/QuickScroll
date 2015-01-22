@@ -8,7 +8,7 @@
     <RootNamespace>QuickScroll</RootNamespace>
     <AssemblyName>QuickScroll</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ReleaseVersion>1.01</ReleaseVersion>
+    <ReleaseVersion>1.10</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,15 +43,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuickScroll.cs" />
+    <Compile Include="QS.cs" />
+    <Compile Include="QS_Category.cs" />
+    <Compile Include="QS_Settings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="GameData\" />
     <Folder Include="GameData\QuickScroll\" />
     <Folder Include="GameData\QuickScroll\Plugins\" />
-    <Folder Include="GameData\QuickScroll\PluginData\" />
-    <Folder Include="GameData\QuickScroll\PluginData\QuickScroll\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GameData\QuickScroll\COPYING" />
@@ -61,6 +61,6 @@
     <None Include="QuickScroll.version" />
     <None Include="README.md" />
     <None Include="GameData\QuickScroll\QuickScroll.version" />
-    <None Include="GameData\QuickScroll\PluginData\QuickScroll\Config.txt" />
+    <None Include="GameData\QuickScroll\Config.txt" />
   </ItemGroup>
 </Project>

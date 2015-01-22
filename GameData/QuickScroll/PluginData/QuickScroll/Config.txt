@@ -1,2 +1,0 @@
-﻿KeyFilter = left shift
-KeyCategory = left ctrl
