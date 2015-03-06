@@ -68,8 +68,7 @@ v0.10 - 2014.12.21
 
 #### Planned updates/new features
 
-- Correct the stock scrolling when there is many categories/filters,
-- Added a GUI to edit all the shortcut.
+* Correct the stock scrolling when there is many categories/filters,
 
 #### Troubleshooting?
 
