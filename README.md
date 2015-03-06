@@ -31,8 +31,6 @@ Shortcut:
 	- Previous/next category Enter + up/down.
 	- Previous/next filter Enter + page up/page down.
 
-You can change these Keys on the file: GameData/QuickScroll/Config.txt
-
 I suggest you to look at the awesome mod PartCatalog which also has this feature (with many others nice features).
 
 #### How to install it?
@@ -45,23 +43,28 @@ Delete the QuickScroll folder in your KSP/GameData folder.
 
 #### Changelog
 
+v1.20 - 2015.03.06
+* New: Added a GUI to config the shortcuts,
+* New: Added the support of the Stocktoolbar and the Toolbar mod,
+* Fix: Corrected the PartListTooltips tweak.
+
 v1.10 - 2015.01.22
-- New: Added enable/disable the mouse wheel scrolling,
-- New: Added enable/disable the shortcuts mouse wheel scrolling,
-- New: Added keyboard shortcuts,
-- New: Added a tweak for the PartListTooltips, with it, the tooltips can't popup until you right click on a part (this feature is disabled by default),
-- Fix: Move the config file to GameData/QuickScroll/Config.txt
+* New: Added enable/disable the mouse wheel scrolling,
+* New: Added enable/disable the shortcuts mouse wheel scrolling,
+* New: Added keyboard shortcuts,
+* New: Added a tweak for the PartListTooltips, with it, the tooltips can't popup until you right click on a part (this feature is disabled by default),
+* Fix: Move the config file to GameData/QuickScroll/Config.txt
 
 v1.01 - 2015.01.02
-- Fix: Hide the part tool tip on scroll.
+* Fix: Hide the part tool tip on scroll.
 
 v1.00 - 2014.12.25
-- New: Added a scroll on the categories buttons,
-- New: Added a scroll on the filters buttons,
-- New: Added a config file for the Key modifier.
+* New: Added a scroll on the categories buttons,
+* New: Added a scroll on the filters buttons,
+* New: Added a config file for the Key modifier.
 
 v0.10 - 2014.12.21
-- Initial release
+* Initial release
 
 #### Planned updates/new features
 
@@ -70,20 +73,23 @@ v0.10 - 2014.12.21
 
 #### Troubleshooting?
 
-This mod will not work well with PartCatalog, with it, you need to uninstall QuickScroll (which will be useless).
-If you want the keyboard shortcut with PartCatalog, you need to disable the mouse wheel scrolling on the config file.
+This mod will not work well with PartCatalog, with it, you need to disable the mouse wheel scrolling.
 
 #### Thanks!
 
-- to BlackNecro for his awesome PartCatalog mod,
-- to all mods developers which make this game really huge,
-- to my friend Neimad who corrects my bad english ...
-- to Squad for this awesome game.
+* to BlackNecro for his awesome PartCatalog mod,
+* to blizzy for his Toolbar mod,
+* to Matthieu James for the Faenza icon theme,
+* to all mods developers which make this game really huge,
+* to my friend Neimad who corrects my bad english ...
+* to Squad for this awesome game.
 
 #### Links
 
-- http://forum.kerbalspaceprogram.com/threads/95168
-- https://kerbalstuff.com/mod/436/QuickScroll
-- http://kerbal.curseforge.com/ksp-mods/226335-quickscroll
-- https://github.com/malahx/QuickScroll
-- PartCatalog: http://forum.kerbalspaceprogram.com/threads/35018
+* http://forum.kerbalspaceprogram.com/threads/95168#QuickScroll
+* https://kerbalstuff.com/mod/436/QuickScroll
+* http://kerbal.curseforge.com/ksp-mods/226335-quickscroll
+* https://github.com/malahx/QuickScroll
+* PartCatalog: http://forum.kerbalspaceprogram.com/threads/35018
+* Toolbar: http://forum.kerbalspaceprogram.com/threads/60863
+* Faenza icon theme: http://gnome-look.org/content/show.php/Faenza?content=128143

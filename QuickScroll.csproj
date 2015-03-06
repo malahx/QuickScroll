@@ -8,7 +8,7 @@
     <RootNamespace>QuickScroll</RootNamespace>
     <AssemblyName>QuickScroll</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ReleaseVersion>1.10</ReleaseVersion>
+    <ReleaseVersion>1.20</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,6 +46,12 @@
     <Compile Include="QS.cs" />
     <Compile Include="QS_Category.cs" />
     <Compile Include="QS_Settings.cs" />
+    <Compile Include="QS_Toolbar.cs" />
+    <Compile Include="ToolbarWrapper.cs" />
+    <Compile Include="QS_Quick.cs" />
+    <Compile Include="QS_GUI.cs" />
+    <Compile Include="QS_ShortCuts.cs" />
+    <Compile Include="QS_Key.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -61,6 +67,6 @@
     <None Include="QuickScroll.version" />
     <None Include="README.md" />
     <None Include="GameData\QuickScroll\QuickScroll.version" />
-    <None Include="GameData\QuickScroll\Config.txt" />
+    <None Include="Scroll.xcf" />
   </ItemGroup>
 </Project>

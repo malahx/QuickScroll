@@ -21,11 +21,16 @@ using System.IO;
 using UnityEngine;
 
 namespace QuickScroll {
-	public class Settings : QS {
+	public class QSettings {
 
-		public static Settings Instance = new Settings ();
+		public static QSettings Instance = new QSettings ();
 
-		private string File_settings = KSPUtil.ApplicationRootPath + "GameData/" + MOD + "/Config.txt";
+		private string PathConfig = KSPUtil.ApplicationRootPath + "GameData/" + Quick.MOD + "/Config.txt";
+
+		[Persistent]
+		public bool StockToolBar = true;
+		[Persistent]
+		public bool BlizzyToolBar = true;
 
 		[Persistent]
 		internal bool EnableWheelScroll = true;
@@ -42,49 +47,55 @@ namespace QuickScroll {
 		internal string KeyPartListTooltipsDisactivate = "mouse 0";
 
 		[Persistent]
-		internal string ModKeyFilterWheel = "left shift";
+		internal KeyCode ModKeyFilterWheel;
 		[Persistent]
-		internal string ModKeyCategoryWheel = "left ctrl";
+		internal KeyCode ModKeyCategoryWheel;
 
 		[Persistent]
-		internal string ModKeyShortCut = "right ctrl";
+		internal KeyCode ModKeyShortCut;
 
 		[Persistent]
-		internal string KeyFilterPrevious = "page up";
+		internal KeyCode KeyFilterPrevious;
 		[Persistent]
-		internal string KeyFilterNext = "page down";
+		internal KeyCode KeyFilterNext;
 		[Persistent]
-		internal string KeyCategoryPrevious = "up";
+		internal KeyCode KeyCategoryPrevious;
 		[Persistent]
-		internal string KeyCategoryNext = "down";
+		internal KeyCode KeyCategoryNext;
 		[Persistent]
-		internal string KeyPagePrevious = "left";
+		internal KeyCode KeyPagePrevious;
 		[Persistent]
-		internal string KeyPageNext = "right";
+		internal KeyCode KeyPageNext;
 		[Persistent]
-		internal string KeyPods = "[1]";
+		internal KeyCode KeyPods;
 		[Persistent]
-		internal string KeyFuelTanks = "[2]";
+		internal KeyCode KeyFuelTanks;
 		[Persistent]
-		internal string KeyEngines = "[3]";
+		internal KeyCode KeyEngines;
 		[Persistent]
-		internal string KeyCommandNControl = "[4]";
+		internal KeyCode KeyCommandNControl;
 		[Persistent]
-		internal string KeyStructural = "[5]";
+		internal KeyCode KeyStructural;
 		[Persistent]
-		internal string KeyAerodynamics = "[6]";
+		internal KeyCode KeyAerodynamics;
 		[Persistent]
-		internal string KeyUtility = "[7]";
+		internal KeyCode KeyUtility;
 		[Persistent]
-		internal string KeySciences = "[8]";
+		internal KeyCode KeySciences;
 
-		// Charger la configuration
+		// GESTION DE LA CONFIGURATION
+		public void Save() {
+			ConfigNode _temp = ConfigNode.CreateConfigFromObject(this, new ConfigNode());
+			_temp.Save(PathConfig);
+			Quick.Log ("Settings Saved");
+		}
 		public void Load() {
-			if (File.Exists (File_settings)) {
-				ConfigNode _temp = ConfigNode.Load (File_settings);
+			if (File.Exists (PathConfig)) {
+				ConfigNode _temp = ConfigNode.Load (PathConfig);
 				ConfigNode.LoadObjectFromConfig (this, _temp);
-				Log("Load");
-				return;
+				Quick.Log ("Settings Loaded");
+			} else {
+				Save ();
 			}
 		}
 	}

@@ -21,55 +21,47 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace QuickScroll {
-	public class Cat : QS {
+	public class QCategory {
 		// Lister tous les filtres (ainsi que les subassemblies)
-		public static PartCategorizer.Category[] Filters {
+		public static List<PartCategorizer.Category> Filters {
 			get {
 				List<PartCategorizer.Category> _filters = new List<PartCategorizer.Category>();
 				_filters.AddRange(PartCategorizer.Instance.filters);
 				_filters.AddRange(PartCategorizer.Instance.categories);
-				return _filters.ToArray();
+				return _filters;
 			}
 		}
 
 		// Indiquer quel filtre est sélectionné
-		public static PartCategorizer.Category FilterSelected(out int index) {
-			index = 0;
-			PartCategorizer.Category[] _categories = Filters;
-			foreach (PartCategorizer.Category _category in _categories) {
-				if (_category.button.activeButton.State == RUIToggleButtonTyped.ButtonState.TRUE) {
-					return _category;
-				}
-				index++;
+		public static int CurrentFilterIndex {
+			get {
+				return Filters.FindIndex(f => f.button.activeButton.State == RUIToggleButtonTyped.ButtonState.TRUE);
 			}
-			return null;
+		}
+
+		public static PartCategorizer.Category CurrentFilter {
+			get {
+				return Filters.Find(f => f.button.activeButton.State == RUIToggleButtonTyped.ButtonState.TRUE);
+			}
 		}
 
 		// Lister toutes les catégories d'un filtre
-		public static PartCategorizer.Category[] Categories {
+		public static List<PartCategorizer.Category> Categories {
 			get {
-				int _index;
-				PartCategorizer.Category _category = FilterSelected(out _index);
-				return _category.subcategories.ToArray();
+				return CurrentFilter.subcategories;
 			}
 		}
 
 		// Indiquer quel catégorie est sélectionnée
-		public static PartCategorizer.Category CategorySelected(out int index) {
-			index = 0;
-			PartCategorizer.Category[] _categories = Categories;
-			foreach (PartCategorizer.Category _category in _categories) {
-				if (_category.button.activeButton.State == RUIToggleButtonTyped.ButtonState.TRUE) {
-					return _category;
-				}
-				index++;
+		public static int CurrentCategoryIndex {
+			get {
+				return Categories.FindIndex(c => c.button.activeButton.State == RUIToggleButtonTyped.ButtonState.TRUE);
 			}
-			return null;
 		}
 
 		// Sélectionner la catégorie/filtre suivant
-		public static PartCategorizer.Category NextCategory(PartCategorizer.Category[] categories, int index) {
-			if (index >= categories.Length -1) {
+		public static PartCategorizer.Category NextCategory(List<PartCategorizer.Category> categories, int index) {
+			if (index >= categories.Count -1) {
 				index = -1;
 			}
 			index++;
@@ -77,9 +69,9 @@ namespace QuickScroll {
 		}
 
 		// Sélectionner la catégorie/filtre précédent
-		public static PartCategorizer.Category PrevCategory(PartCategorizer.Category[] categories, int index) {
+		public static PartCategorizer.Category PrevCategory(List<PartCategorizer.Category> categories, int index) {
 			if (index <= 0) {
-				index = categories.Length;
+				index = categories.Count;
 			}
 			index--;
 			return categories[index];
@@ -96,8 +88,7 @@ namespace QuickScroll {
 
 		// Changer de catégorie
 		internal static void SelectPartCategory(float scroll) {
-			int _index;
-			CategorySelected (out _index);
+			int _index = CurrentCategoryIndex;
 			PartCategorizer.Category _category = (scroll > 0 ? PrevCategory (Categories, _index) : NextCategory (Categories, _index));
 			RUIToggleButtonTyped _btn = _category.button.activeButton;
 			_btn.SetTrue (_btn, RUIToggleButtonTyped.ClickType.FORCED, true);
@@ -106,8 +97,7 @@ namespace QuickScroll {
 
 		// Changer de filtre
 		internal static void SelectPartFilter(float scroll) {
-			int _index;
-			FilterSelected (out _index);
+			int _index = CurrentFilterIndex;
 			PartCategorizer.Category _category = (scroll > 0 ? PrevCategory (Filters, _index) : NextCategory (Filters, _index));
 			RUIToggleButtonTyped _btn = _category.button.activeButton;
 			_btn.SetTrue (_btn, RUIToggleButtonTyped.ClickType.FORCED, true);	
@@ -133,11 +123,38 @@ namespace QuickScroll {
 
 		// Petit tweak
 		internal static void PartListTooltipsTWEAK(bool enable) {
-			if (Settings.Instance.EnableTWEAKPartListTooltips) {
+			if (QSettings.Instance.EnableTWEAKPartListTooltips) {
 				PartListTooltips.fetch.enabled = enable;
+			} else {
+				PartListTooltips.fetch.enabled = true;
 			}
-			if (PartListTooltips.fetch.enabled && PartListTooltips.fetch.displayTooltip) {
-				PartListTooltips.fetch.HideTooltip ();
+			if (!enable) {
+				if (PartListTooltips.fetch.displayTooltip) {
+					GameEvents.onTooltipDestroyRequested.Fire ();
+					PartListTooltips.fetch.HideTooltip ();
+				}
+			} else {
+				if (PartListTooltips.fetch.partIcon != null) {
+					if (PartListTooltips.fetch.partIcon.MouseOver && !PartListTooltips.fetch.displayTooltip) {
+						PartListTooltips.fetch.ShowTooltip (PartListTooltips.fetch.partIcon, PartListTooltips.fetch.partInfo);
+						PartListTooltips.fetch.PinTooltip ();
+					}
+				}
+			}
+		}
+		internal static void PartListTooltipsTWEAK() {
+			if (HighLogic.LoadedSceneIsEditor) {
+				if (EditorLogic.fetch.editorScreen == EditorScreen.Parts) {
+					// TWEAKPartListTooltips
+					if (QSettings.Instance.EnableTWEAKPartListTooltips) {
+						if (Input.GetKeyDown (QSettings.Instance.KeyPartListTooltipsActivate)) {
+							QCategory.PartListTooltipsTWEAK (true);
+						}
+						if (Input.GetKeyUp (QSettings.Instance.KeyPartListTooltipsDisactivate)) {
+							QCategory.PartListTooltipsTWEAK (false);
+						}
+					}
+				}
 			}
 		}
 	}
