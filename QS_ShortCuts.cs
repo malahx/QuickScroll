@@ -46,6 +46,7 @@ namespace QuickScroll {
 
 		internal static void Update() {
 			if (HighLogic.LoadedSceneIsEditor) {
+				#if GUI
 				if (SetKey != Key.None) {
 					KeyCode _key = GetKeyPressed ();
 					if (_key != KeyCode.None) {
@@ -56,6 +57,7 @@ namespace QuickScroll {
 					}
 					return;
 				}
+				#endif
 				if (EditorLogic.fetch.editorScreen == EditorScreen.Parts) {
 		
 					// Wheel Scroll
@@ -146,7 +148,7 @@ namespace QuickScroll {
 				}
 			}
 		}
-
+		#if GUI
 		internal static void OnGUI() {
 			if (HighLogic.LoadedSceneIsEditor) {
 				if (SetKey != Key.None) {
@@ -154,5 +156,6 @@ namespace QuickScroll {
 				}
 			}
 		}
+		#endif
 	}
 }

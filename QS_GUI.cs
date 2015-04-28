@@ -24,49 +24,52 @@ namespace QuickScroll {
 	public class QGUI {
 
 		internal static bool WindowSettings = false;
-		private static Rect RectSettings = new Rect();
+		internal static Rect RectSettings = new Rect();
 
 		internal static void Awake() {
-			if (HighLogic.LoadedSceneIsGame) {
-				RectSettings = new Rect ((Screen.width - 615)/2, 40, 615, 214);
-			}
+			RectSettings = new Rect (0, 0, 615, 214);
+			RefreshRect ();
 		}
 
-		private static void Lock(bool activate, ControlTypes Ctrl) {
-			if (HighLogic.LoadedSceneIsFlight) {
-				FlightDriver.SetPause (activate);
-				if (activate) {
-					InputLockManager.SetControlLock (ControlTypes.CAMERACONTROLS | ControlTypes.MAP, "Lock" + Quick.MOD);
-				}
-			} else if (HighLogic.LoadedSceneIsEditor) {
+		internal static void RefreshRect() {
+			RectSettings.x = (Screen.width - RectSettings.width) / 2;
+			RectSettings.y = (Screen.height - RectSettings.height) / 2;
+		}
+
+		private static void Lock(bool activate, ControlTypes Ctrl = ControlTypes.None) {
+			if (HighLogic.LoadedSceneIsEditor) {
 				if (activate) {
 					EditorLogic.fetch.Lock (true, true, true, "Lock" + Quick.MOD);
 				} else {
 					EditorLogic.fetch.Unlock ("Lock" + Quick.MOD);
 				}
-			} else if (activate) {
-				InputLockManager.SetControlLock (Ctrl, "Lock" + Quick.MOD);
-			} 
+			}
 			if (!activate) {
 				InputLockManager.RemoveControlLock ("Lock" + Quick.MOD);
 			}
 		}
 
-		internal static void Settings() {
-			WindowSettings = !WindowSettings;
-			Lock (WindowSettings, ControlTypes.EDITOR_LOCK);
-			QToolbar.Instance.Reset ();
+		public static void Settings() {
+			SettingsSwitch ();
 			if (!WindowSettings) {
 				QCategory.PartListTooltipsTWEAK (false);
+				QuickScroll.StockToolbar.Reset ();
+				QuickScroll.BlizzyToolbar.Reset ();
 				QSettings.Instance.Save ();
 			}
 		}
+
+		internal static void SettingsSwitch() {
+			WindowSettings = !WindowSettings;
+			QuickScroll.StockToolbar.Set (WindowSettings);
+			Lock (WindowSettings);
+		}
+
 		internal static void OnGUI() {
-			if (HighLogic.LoadedSceneIsEditor) {
-				if (WindowSettings) {
-					GUI.skin = HighLogic.Skin;
-					RectSettings = GUILayout.Window (1545145, RectSettings, DrawSettings, Quick.MOD + " " + Quick.VERSION, GUILayout.Width (RectSettings.width), GUILayout.ExpandHeight (true));
-				}
+			if (WindowSettings) {
+				GUI.skin = HighLogic.Skin;
+				RefreshRect ();
+				RectSettings = GUILayout.Window (1545145, RectSettings, DrawSettings, Quick.MOD + " " + Quick.VERSION, GUILayout.Width (RectSettings.width), GUILayout.ExpandHeight (true));
 			}
 		}
 		// Panneau de configuration
@@ -93,7 +96,7 @@ namespace QuickScroll {
 
 			GUILayout.BeginHorizontal ();
 			QSettings.Instance.StockToolBar = GUILayout.Toggle (QSettings.Instance.StockToolBar, "Use the Stock ToolBar", GUILayout.Width (300));
-			if (QToolbar.Instance.isBlizzyToolBar) {
+			if (QBlizzyToolbar.isAvailable) {
 				QSettings.Instance.BlizzyToolBar = GUILayout.Toggle (QSettings.Instance.BlizzyToolBar, "Use the Blizzy ToolBar", GUILayout.Width (300));
 			}
 			GUILayout.EndHorizontal ();

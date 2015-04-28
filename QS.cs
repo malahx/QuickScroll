@@ -26,31 +26,46 @@ namespace QuickScroll {
 	[KSPAddon(KSPAddon.Startup.EditorAny, false)]
 	public class QuickScroll : Quick {
 
+		internal static QuickScroll Instance;
+		#if GUI
+		internal static QBlizzyToolbar BlizzyToolbar;
+		internal static QStockToolbar StockToolbar;
+		#endif
+
 		// Initialisation des modules
 		private void Awake() {
-			QToolbar.Awake ();
-			QShortCuts.Awake ();
+			Instance = this;
+			#if GUI
+			BlizzyToolbar = new QBlizzyToolbar ();
+			StockToolbar = new QStockToolbar ();
+			GameEvents.onGUIApplicationLauncherDestroyed.Add (StockToolbar.AppLauncherDestroyed);
+			GameEvents.onGameSceneLoadRequested.Add (StockToolbar.AppLauncherDestroyed);
 			QGUI.Awake ();
+			#endif
+			QShortCuts.Awake ();
 		}
 
 		// Initialisation des variables
 		private void Start() {
-			if (HighLogic.LoadedSceneIsGame) {
-				QSettings.Instance.Load ();
-				QToolbar.Instance.Start ();
-				QShortCuts.VerifyKey ();
-				if (HighLogic.LoadedSceneIsEditor) {
-					QCategory.PartListTooltipsTWEAK (false);
-				}
+			QSettings.Instance.Load ();
+			#if GUI
+			BlizzyToolbar.Start ();
+			StartCoroutine (StockToolbar.AppLauncherReady ());
+			#endif
+			QShortCuts.VerifyKey ();
+			if (HighLogic.LoadedSceneIsEditor) {
+				QCategory.PartListTooltipsTWEAK (false);
 			}
 		}
 
+		#if GUI
 		// Arrêter le plugin
 		private void OnDestroy() {
-			if (HighLogic.LoadedSceneIsGame) {
-				QToolbar.Instance.OnDestroy ();
-			}
+			BlizzyToolbar.OnDestroy ();
+			GameEvents.onGUIApplicationLauncherDestroyed.Remove (StockToolbar.AppLauncherDestroyed);
+			GameEvents.onGameSceneLoadRequested.Remove (StockToolbar.AppLauncherDestroyed);
 		}
+		#endif
 
 		// Gérer les raccourcis
 		private void Update() {
@@ -61,11 +76,13 @@ namespace QuickScroll {
 			QCategory.PartListTooltipsTWEAK();
 		}
 
+		#if GUI
 		// Gérer l'interface
 		private void OnGUI() {
 			GUI.skin = HighLogic.Skin;
 			QShortCuts.OnGUI ();
 			QGUI.OnGUI ();
 		}
+		#endif
 	}
 }

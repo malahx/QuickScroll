@@ -1,5 +1,5 @@
 ﻿#### QuickScroll
-#### A plugin for Kerbal Space Program 0.90.0
+#### A plugin for Kerbal Space Program 1.0.0
 #### Copyright 2015 Malah
 
 This program is free software: you can redistribute it and/or modify
@@ -37,11 +37,23 @@ I suggest you to look at the awesome mod PartCatalog which also has this feature
 
 Unzip all files. Put the QuickScroll folder in your KSP/GameData folder.
 
+#### How to update it?
+
+Unzip all files. Merge the new QuickScroll folder with the old folder which is in your KSP/GameData folder.
+
 #### How to uninstall it?
 
 Delete the QuickScroll folder in your KSP/GameData folder.
 
 #### Changelog
+
+v1.21 - 2015.04.28
+* Fix: Converted textures to DDS,
+* Fix: Corrected the Stock Toolbar icon not being created,
+* Fix: Corrected the loading of the config file (thanks Tarheel1999),
+* Fix: Some minor bug,
+* Optionnal: Added an optionnal version of QuickScroll without GUI and Stock/Blizzy Toolbar support,
+* Updated to 1.00
 
 v1.20 - 2015.03.06
 * New: Added a GUI to config the shortcuts,

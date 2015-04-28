@@ -25,74 +25,55 @@ namespace QuickScroll {
 
 		public static QSettings Instance = new QSettings ();
 
-		private string PathConfig = KSPUtil.ApplicationRootPath + "GameData/" + Quick.MOD + "/Config.txt";
+		private string FileConfig = KSPUtil.ApplicationRootPath + "GameData/" + Quick.MOD + "/Config.txt";
 
-		[Persistent]
-		public bool StockToolBar = true;
-		[Persistent]
-		public bool BlizzyToolBar = true;
+		#if GUI
+		[Persistent] public bool StockToolBar = true;
+		[Persistent] public bool BlizzyToolBar = true;
+		#endif
 
-		[Persistent]
-		internal bool EnableWheelScroll = true;
-		[Persistent]
-		internal bool EnableWheelShortCut = true;
-		[Persistent]
-		internal bool EnableKeyShortCut = true;
-		[Persistent]
-		internal bool EnableTWEAKPartListTooltips = false;
+		[Persistent] internal bool EnableWheelScroll = true;
+		[Persistent] internal bool EnableWheelShortCut = true;
+		[Persistent] internal bool EnableKeyShortCut = true;
+		[Persistent] internal bool EnableTWEAKPartListTooltips = false;
 
-		[Persistent]
-		internal string KeyPartListTooltipsActivate = "mouse 1";
-		[Persistent]
-		internal string KeyPartListTooltipsDisactivate = "mouse 0";
+		[Persistent] internal string KeyPartListTooltipsActivate = "mouse 1";
+		[Persistent] internal string KeyPartListTooltipsDisactivate = "mouse 0";
 
-		[Persistent]
-		internal KeyCode ModKeyFilterWheel;
-		[Persistent]
-		internal KeyCode ModKeyCategoryWheel;
+		[Persistent] internal KeyCode ModKeyFilterWheel;
+		[Persistent] internal KeyCode ModKeyCategoryWheel;
 
-		[Persistent]
-		internal KeyCode ModKeyShortCut;
+		[Persistent] internal KeyCode ModKeyShortCut;
 
-		[Persistent]
-		internal KeyCode KeyFilterPrevious;
-		[Persistent]
-		internal KeyCode KeyFilterNext;
-		[Persistent]
-		internal KeyCode KeyCategoryPrevious;
-		[Persistent]
-		internal KeyCode KeyCategoryNext;
-		[Persistent]
-		internal KeyCode KeyPagePrevious;
-		[Persistent]
-		internal KeyCode KeyPageNext;
-		[Persistent]
-		internal KeyCode KeyPods;
-		[Persistent]
-		internal KeyCode KeyFuelTanks;
-		[Persistent]
-		internal KeyCode KeyEngines;
-		[Persistent]
-		internal KeyCode KeyCommandNControl;
-		[Persistent]
-		internal KeyCode KeyStructural;
-		[Persistent]
-		internal KeyCode KeyAerodynamics;
-		[Persistent]
-		internal KeyCode KeyUtility;
-		[Persistent]
-		internal KeyCode KeySciences;
+		[Persistent] internal KeyCode KeyFilterPrevious;
+		[Persistent] internal KeyCode KeyFilterNext;
+		[Persistent] internal KeyCode KeyCategoryPrevious;
+		[Persistent] internal KeyCode KeyCategoryNext;
+		[Persistent] internal KeyCode KeyPagePrevious;
+		[Persistent] internal KeyCode KeyPageNext;
+		[Persistent] internal KeyCode KeyPods;
+		[Persistent] internal KeyCode KeyFuelTanks;
+		[Persistent] internal KeyCode KeyEngines;
+		[Persistent] internal KeyCode KeyCommandNControl;
+		[Persistent] internal KeyCode KeyStructural;
+		[Persistent] internal KeyCode KeyAerodynamics;
+		[Persistent] internal KeyCode KeyUtility;
+		[Persistent] internal KeyCode KeySciences;
 
 		// GESTION DE LA CONFIGURATION
 		public void Save() {
 			ConfigNode _temp = ConfigNode.CreateConfigFromObject(this, new ConfigNode());
-			_temp.Save(PathConfig);
+			_temp.Save(FileConfig);
 			Quick.Log ("Settings Saved");
 		}
 		public void Load() {
-			if (File.Exists (PathConfig)) {
-				ConfigNode _temp = ConfigNode.Load (PathConfig);
-				ConfigNode.LoadObjectFromConfig (this, _temp);
+			if (File.Exists (FileConfig)) {
+				try {
+					ConfigNode _temp = ConfigNode.Load (FileConfig);
+					ConfigNode.LoadObjectFromConfig (this, _temp);
+				} catch {
+					Save ();
+				}
 				Quick.Log ("Settings Loaded");
 			} else {
 				Save ();

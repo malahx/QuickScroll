@@ -3,12 +3,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9BFAEF28-2599-4BD6-8B03-C32300F49EA2}</ProjectGuid>
+    <ProjectGuid>{9B093ED9-034E-495D-AADF-EBC5B21F559F}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>QuickScroll</RootNamespace>
+    <RootNamespace>NoGUI</RootNamespace>
     <AssemblyName>QuickScroll</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <ReleaseVersion>1.21</ReleaseVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,48 +31,53 @@
         <Command type="AfterBuild" command="./install.sh" />
       </CustomCommands>
     </CustomCommands>
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>GUI</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\lib\1.00\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\lib\1.00\UnityEngine.dll</HintPath>
+      <HintPath>..\..\lib\1.00\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\lib\1.00\Assembly-CSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QS.cs" />
-    <Compile Include="QS_Category.cs" />
-    <Compile Include="QS_Settings.cs" />
-    <Compile Include="ToolbarWrapper.cs" />
-    <Compile Include="QS_Quick.cs" />
-    <Compile Include="QS_GUI.cs" />
-    <Compile Include="QS_ShortCuts.cs" />
-    <Compile Include="QS_Key.cs" />
-    <Compile Include="QS_ToolbarBlizzy.cs" />
-    <Compile Include="QS_ToolbarStock.cs" />
+    <Compile Include="..\QS.cs">
+      <Link>QS.cs</Link>
+    </Compile>
+    <Compile Include="..\QS_Category.cs">
+      <Link>QS_Category.cs</Link>
+    </Compile>
+    <Compile Include="..\QS_Key.cs">
+      <Link>QS_Key.cs</Link>
+    </Compile>
+    <Compile Include="..\QS_Quick.cs">
+      <Link>QS_Quick.cs</Link>
+    </Compile>
+    <Compile Include="..\QS_Settings.cs">
+      <Link>QS_Settings.cs</Link>
+    </Compile>
+    <Compile Include="..\QS_ShortCuts.cs">
+      <Link>QS_ShortCuts.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="GameData\" />
-    <Folder Include="GameData\QuickScroll\" />
-    <Folder Include="GameData\QuickScroll\Plugins\" />
-    <Folder Include="GameData\QuickScroll\Textures\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="GameData\QuickScroll\COPYING" />
-    <None Include="GameData\QuickScroll\README.md" />
-    <None Include="GameData\QuickScroll\Plugins\QuickScroll.dll" />
-    <None Include="COPYING" />
-    <None Include="QuickScroll.version" />
-    <None Include="README.md" />
-    <None Include="GameData\QuickScroll\QuickScroll.version" />
-    <None Include="Scroll.xcf" />
-    <None Include="GameData\QuickScroll\Textures\BlizzyToolBar.dds" />
-    <None Include="GameData\QuickScroll\Textures\StockToolBar.dds" />
+    <None Include="..\Optionnal\NoGUI\GameData\QuickScroll\COPYING">
+      <Link>GameData\QuickScroll\COPYING</Link>
+    </None>
+    <None Include="..\Optionnal\NoGUI\GameData\QuickScroll\QuickScroll.version">
+      <Link>GameData\QuickScroll\QuickScroll.version</Link>
+    </None>
+    <None Include="..\Optionnal\NoGUI\GameData\QuickScroll\README.md">
+      <Link>GameData\QuickScroll\README.md</Link>
+    </None>
+    <None Include="..\Optionnal\NoGUI\GameData\QuickScroll\Plugins\QuickScroll.dll">
+      <Link>GameData\QuickScroll\Plugins\QuickScroll.dll</Link>
+    </None>
   </ItemGroup>
 </Project>

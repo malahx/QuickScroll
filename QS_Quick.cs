@@ -23,7 +23,7 @@ using UnityEngine;
 namespace QuickScroll {
 	public class Quick : MonoBehaviour {
 
-		public readonly static string VERSION = Assembly.GetAssembly(typeof(QuickScroll)).GetName().Version.Major + "." + Assembly.GetAssembly(typeof(QuickScroll)).GetName().Version.Minor;
+		public readonly static string VERSION = Assembly.GetAssembly(typeof(QuickScroll)).GetName().Version.Major + "." + Assembly.GetAssembly(typeof(QuickScroll)).GetName().Version.Minor + Assembly.GetAssembly(typeof(QuickScroll)).GetName().Version.Build;
 		public readonly static string MOD = Assembly.GetAssembly(typeof(QuickScroll)).GetName().Name;
 		private static bool isdebug = true;
 		internal static void Log(string msg) {

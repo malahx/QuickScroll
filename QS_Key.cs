@@ -250,7 +250,7 @@ namespace QuickScroll {
 				break;
 			}
 		}
-
+		#if GUI
 		internal static KeyCode GetKeyPressed() {
 			string[] _keys = Enum.GetNames (typeof(KeyCode));
 			int _length = _keys.Length;
@@ -296,5 +296,6 @@ namespace QuickScroll {
 			GUILayout.EndHorizontal();
 			GUILayout.Space(5);
 		}
+		#endif
 	}
 }
