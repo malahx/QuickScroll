@@ -21,8 +21,7 @@ using System.Collections;
 using UnityEngine;
 
 namespace QuickScroll {
-	//[KSPAddon(KSPAddon.Startup.EveryScene, false)]
-	public class QStockToolbar : MonoBehaviour {
+	public class QStockToolbar {
 	
 		internal static bool Enabled {
 			get {
@@ -47,27 +46,9 @@ namespace QuickScroll {
 
 		internal static bool isAvailable {
 			get {
-				return ApplicationLauncher.Instance != null;
+				return ApplicationLauncher.Ready && ApplicationLauncher.Instance != null;
 			}
 		}
-
-		/*internal static QStockToolbar Instance {
-			get;
-			private set;
-		}
-
-		internal void Awake() {
-			Instance = this;
-			GameEvents.onGUIApplicationLauncherDestroyed.Add (AppLauncherDestroyed);
-			GameEvents.onGameSceneLoadRequested.Add (AppLauncherDestroyed);
-		}
-
-		internal void Start() {
-			if (!HighLogic.LoadedSceneIsGame) {
-				return;
-			}
-			StartCoroutine (AppLauncherReady ());
-		}*/
 
 		internal IEnumerator AppLauncherReady() {
 			if (!Enabled || !HighLogic.LoadedSceneIsGame) {
@@ -76,12 +57,7 @@ namespace QuickScroll {
 			while (!isAvailable) {
 				yield return 0;
 			}
-			while (!ApplicationLauncher.Ready) {
-				yield return 0;
-			}
 			Init ();
-			//yield return new WaitForEndOfFrame ();
-			//Refresh ();
 		}
 
 		internal void AppLauncherDestroyed(GameScenes gameScenes) {
@@ -91,11 +67,6 @@ namespace QuickScroll {
 		internal void AppLauncherDestroyed() {
 			Destroy ();
 		}
-
-		/*internal void OnDestroy() {
-			GameEvents.onGUIApplicationLauncherDestroyed.Remove (AppLauncherDestroyed);
-			GameEvents.onGameSceneLoadRequested.Remove (AppLauncherDestroyed);
-		}*/
 
 		private void Init() {
 			if (!isAvailable) {
@@ -132,18 +103,6 @@ namespace QuickScroll {
 				}
 			}
 		}
-
-		/*internal void Refresh() {
-			if (appLauncherButton != null) {
-				if (QGUI.WindowSettings && appLauncherButton.State == RUIToggleButton.ButtonState.FALSE) {
-					appLauncherButton.SetTrue (false);
-				}
-				if (!QGUI.WindowSettings && appLauncherButton.State == RUIToggleButton.ButtonState.TRUE) {
-					appLauncherButton.SetFalse (false);
-				}
-				//appLauncherButton.SetTexture (GetTexture);
-			}
-		}*/
 
 		internal void Reset() {
 			if (appLauncherButton != null) {

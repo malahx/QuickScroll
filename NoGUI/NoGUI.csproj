@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>NoGUI</RootNamespace>
     <AssemblyName>QuickScroll</AssemblyName>
-    <ReleaseVersion>1.21</ReleaseVersion>
+    <ReleaseVersion>1.22</ReleaseVersion>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -34,11 +34,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\lib\1.00\UnityEngine.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\lib\1.00\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\lib\1.02\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\lib\1.02\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

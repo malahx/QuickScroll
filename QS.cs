@@ -28,18 +28,19 @@ namespace QuickScroll {
 
 		internal static QuickScroll Instance;
 		#if GUI
-		internal static QBlizzyToolbar BlizzyToolbar;
-		internal static QStockToolbar StockToolbar;
+		[KSPField(isPersistant = true)] internal static QBlizzyToolbar BlizzyToolbar;
+		[KSPField(isPersistant = true)] internal static QStockToolbar StockToolbar;
 		#endif
 
 		// Initialisation des modules
 		private void Awake() {
 			Instance = this;
 			#if GUI
-			BlizzyToolbar = new QBlizzyToolbar ();
-			StockToolbar = new QStockToolbar ();
+			if (BlizzyToolbar == null) BlizzyToolbar = new QBlizzyToolbar ();
+			if (StockToolbar == null) StockToolbar = new QStockToolbar ();
 			GameEvents.onGUIApplicationLauncherDestroyed.Add (StockToolbar.AppLauncherDestroyed);
 			GameEvents.onGameSceneLoadRequested.Add (StockToolbar.AppLauncherDestroyed);
+			GameEvents.onGUIApplicationLauncherUnreadifying.Add (StockToolbar.AppLauncherDestroyed);
 			QGUI.Awake ();
 			#endif
 			QShortCuts.Awake ();
@@ -64,6 +65,7 @@ namespace QuickScroll {
 			BlizzyToolbar.OnDestroy ();
 			GameEvents.onGUIApplicationLauncherDestroyed.Remove (StockToolbar.AppLauncherDestroyed);
 			GameEvents.onGameSceneLoadRequested.Remove (StockToolbar.AppLauncherDestroyed);
+			GameEvents.onGUIApplicationLauncherUnreadifying.Remove (StockToolbar.AppLauncherDestroyed);
 		}
 		#endif
 
