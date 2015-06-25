@@ -21,7 +21,7 @@ using UnityEngine;
 
 namespace QuickScroll {
 	public class QKey {
-	
+		#if SHORTCUT
 		internal static Key SetKey = Key.None;
 		internal static Rect RectSetKey = new Rect();
 
@@ -53,7 +53,7 @@ namespace QuickScroll {
 			case Key.ModKeyCategoryWheel:
 				return KeyCode.LeftControl;
 			case Key.ModKeyShortCut:
-				return KeyCode.RightControl;
+				return KeyCode.KeypadEnter;
 			case Key.FilterPrevious:
 				return KeyCode.PageUp;
 			case Key.FilterNext:
@@ -170,29 +170,17 @@ namespace QuickScroll {
 			try {
 				Input.GetKey(CurrentKey(key));
 			} catch {
-				Quick.Warning ("Wrong key: " + CurrentKey(key));
+				QuickScroll.Warning ("Wrong key: " + CurrentKey(key));
 				SetCurrentKey (key, DefaultKey(key));
 			}
 		}
 
 		internal static void VerifyKey() {
-			VerifyKey (Key.ModKeyFilterWheel);
-			VerifyKey (Key.ModKeyCategoryWheel);
-			VerifyKey (Key.ModKeyShortCut);
-			VerifyKey (Key.FilterPrevious);
-			VerifyKey (Key.FilterNext);
-			VerifyKey (Key.CategoryPrevious);
-			VerifyKey (Key.CategoryNext);
-			VerifyKey (Key.PagePrevious);
-			VerifyKey (Key.PageNext);
-			VerifyKey (Key.Pods);
-			VerifyKey (Key.FuelTanks);
-			VerifyKey (Key.Engines);
-			VerifyKey (Key.CommandNControl);
-			VerifyKey (Key.Structural);
-			VerifyKey (Key.Aerodynamics);
-			VerifyKey (Key.Utility);
-			VerifyKey (Key.Sciences);
+			string[] _keys = Enum.GetNames (typeof(Key));
+			int _length = _keys.Length;
+			for (int _key = 1; _key < _length; _key++) {
+				VerifyKey ((Key)_key);
+			}
 		}
 
 		internal static void SetCurrentKey(Key key, KeyCode CurrentKey) {
@@ -250,18 +238,8 @@ namespace QuickScroll {
 				break;
 			}
 		}
+		#endif
 		#if GUI
-		internal static KeyCode GetKeyPressed() {
-			string[] _keys = Enum.GetNames (typeof(KeyCode));
-			int _length = _keys.Length;
-			for (int _key = 0; _key < _length; _key++) {
-				if (Input.GetKey((KeyCode)_key)) {
-					return (KeyCode)_key;
-				}
-			}
-			return KeyCode.None;
-		}
-
 		internal static void DrawSetKey(int id) {
 			GUILayout.BeginVertical ();
 			GUILayout.BeginHorizontal ();
@@ -269,14 +247,17 @@ namespace QuickScroll {
 			GUILayout.EndHorizontal();
 			GUILayout.Space(5);
 			GUILayout.BeginHorizontal();
-			if (GUILayout.Button ("Cancel Assignment", GUILayout.ExpandWidth(true), GUILayout.Height (30))) {
-				SetKey = Key.None;
-				QGUI.WindowSettings = true;
-				return;
-			}
-			GUILayout.Space(5);
 			if (GUILayout.Button ("Clear Assignment", GUILayout.ExpandWidth(true), GUILayout.Height (30))) {
 				SetCurrentKey (SetKey, KeyCode.None);
+				SetKey = Key.None;
+				QGUI.WindowSettings = true;
+			}
+			if (GUILayout.Button ("Default Assignment", GUILayout.ExpandWidth(true), GUILayout.Height (30))) {
+				SetCurrentKey (SetKey, DefaultKey(SetKey));
+				SetKey = Key.None;
+				QGUI.WindowSettings = true;
+			}
+			if (GUILayout.Button ("Cancel Assignment", GUILayout.ExpandWidth(true), GUILayout.Height (30))) {
 				SetKey = Key.None;
 				QGUI.WindowSettings = true;
 			}

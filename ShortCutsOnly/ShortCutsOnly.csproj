@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9B093ED9-034E-495D-AADF-EBC5B21F559F}</ProjectGuid>
+    <ProjectGuid>{A1761652-5307-4412-B1E0-6B933AC8EC5D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>QuickScroll</RootNamespace>
     <AssemblyName>QuickScroll</AssemblyName>
@@ -11,15 +11,14 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <Description>#### QuickScroll
 #### A plugin for Kerbal Space Program
-#### Copyright 2015 Malah
-</Description>
+#### Copyright 2015 Malah</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;SHORTCUT;SCROLL;</DefineConstants>
+    <DefineConstants>DEBUG;SHORTCUT;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -30,6 +29,7 @@
     </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
@@ -40,17 +40,16 @@
         <Command type="AfterBuild" command="./install.sh" />
       </CustomCommands>
     </CustomCommands>
-    <DefineConstants>SHORTCUT;SCROLL;</DefineConstants>
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>pdbonly</DebugType>
+    <DefineConstants>SHORTCUT;</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\lib\1.0.4\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\lib\1.0.4\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\lib\1.0.4\Assembly-CSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -73,25 +72,22 @@
     <Compile Include="..\QS_ShortCuts.cs">
       <Link>QS_ShortCuts.cs</Link>
     </Compile>
-    <Compile Include="..\QS_Scroll.cs">
-      <Link>QS_Scroll.cs</Link>
-    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="GameData\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Optional\NoGUI\GameData\QuickScroll\COPYING">
+    <None Include="..\Optional\ShortCutsOnly\GameData\QuickScroll\COPYING">
       <Link>GameData\QuickScroll\COPYING</Link>
     </None>
-    <None Include="..\Optional\NoGUI\GameData\QuickScroll\QuickScroll.version">
+    <None Include="..\Optional\ShortCutsOnly\GameData\QuickScroll\QuickScroll.version">
       <Link>GameData\QuickScroll\QuickScroll.version</Link>
     </None>
-    <None Include="..\Optional\NoGUI\GameData\QuickScroll\README.md">
+    <None Include="..\Optional\ShortCutsOnly\GameData\QuickScroll\README.md">
       <Link>GameData\QuickScroll\README.md</Link>
     </None>
-    <None Include="..\Optional\NoGUI\GameData\QuickScroll\Plugins\QuickScroll.dll">
+    <None Include="..\Optional\ShortCutsOnly\GameData\QuickScroll\Plugins\QuickScroll.dll">
       <Link>GameData\QuickScroll\Plugins\QuickScroll.dll</Link>
     </None>
   </ItemGroup>

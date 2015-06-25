@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9B093ED9-034E-495D-AADF-EBC5B21F559F}</ProjectGuid>
+    <ProjectGuid>{E397751A-C0A3-4AC1-9EA6-841CA2105CE9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>QuickScroll</RootNamespace>
     <AssemblyName>QuickScroll</AssemblyName>
@@ -11,15 +11,14 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <Description>#### QuickScroll
 #### A plugin for Kerbal Space Program
-#### Copyright 2015 Malah
-</Description>
+#### Copyright 2015 Malah</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;SHORTCUT;SCROLL;</DefineConstants>
+    <DefineConstants>DEBUG;SCROLL;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -40,8 +39,8 @@
         <Command type="AfterBuild" command="./install.sh" />
       </CustomCommands>
     </CustomCommands>
-    <DefineConstants>SHORTCUT;SCROLL;</DefineConstants>
     <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>SCROLL;</DefineConstants>
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
@@ -61,17 +60,11 @@
     <Compile Include="..\QS_Category.cs">
       <Link>QS_Category.cs</Link>
     </Compile>
-    <Compile Include="..\QS_Key.cs">
-      <Link>QS_Key.cs</Link>
-    </Compile>
     <Compile Include="..\QS_Quick.cs">
       <Link>QS_Quick.cs</Link>
     </Compile>
     <Compile Include="..\QS_Settings.cs">
       <Link>QS_Settings.cs</Link>
-    </Compile>
-    <Compile Include="..\QS_ShortCuts.cs">
-      <Link>QS_ShortCuts.cs</Link>
     </Compile>
     <Compile Include="..\QS_Scroll.cs">
       <Link>QS_Scroll.cs</Link>
@@ -82,16 +75,16 @@
     <Folder Include="GameData\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Optional\NoGUI\GameData\QuickScroll\COPYING">
+    <None Include="..\Optional\ScrollOnly\GameData\QuickScroll\COPYING">
       <Link>GameData\QuickScroll\COPYING</Link>
     </None>
-    <None Include="..\Optional\NoGUI\GameData\QuickScroll\QuickScroll.version">
+    <None Include="..\Optional\ScrollOnly\GameData\QuickScroll\QuickScroll.version">
       <Link>GameData\QuickScroll\QuickScroll.version</Link>
     </None>
-    <None Include="..\Optional\NoGUI\GameData\QuickScroll\README.md">
+    <None Include="..\Optional\ScrollOnly\GameData\QuickScroll\README.md">
       <Link>GameData\QuickScroll\README.md</Link>
     </None>
-    <None Include="..\Optional\NoGUI\GameData\QuickScroll\Plugins\QuickScroll.dll">
+    <None Include="..\Optional\ScrollOnly\GameData\QuickScroll\Plugins\QuickScroll.dll">
       <Link>GameData\QuickScroll\Plugins\QuickScroll.dll</Link>
     </None>
   </ItemGroup>

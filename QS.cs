@@ -24,26 +24,27 @@ using UnityEngine;
 namespace QuickScroll {
 
 	[KSPAddon(KSPAddon.Startup.EditorAny, false)]
-	public class QuickScroll : Quick {
+	public partial class QuickScroll : MonoBehaviour {
 
 		internal static QuickScroll Instance;
 		#if GUI
 		[KSPField(isPersistant = true)] internal static QBlizzyToolbar BlizzyToolbar;
-		[KSPField(isPersistant = true)] internal static QStockToolbar StockToolbar;
 		#endif
 
 		// Initialisation des modules
 		private void Awake() {
+			if (Instance != null) {
+				Destroy (this);
+				Warning ("There's already an Instance of " + MOD);
+				return;
+			}
 			Instance = this;
 			#if GUI
 			if (BlizzyToolbar == null) BlizzyToolbar = new QBlizzyToolbar ();
-			if (StockToolbar == null) StockToolbar = new QStockToolbar ();
-			GameEvents.onGUIApplicationLauncherDestroyed.Add (StockToolbar.AppLauncherDestroyed);
-			GameEvents.onGameSceneLoadRequested.Add (StockToolbar.AppLauncherDestroyed);
-			GameEvents.onGUIApplicationLauncherUnreadifying.Add (StockToolbar.AppLauncherDestroyed);
 			QGUI.Awake ();
-			#endif
 			QShortCuts.Awake ();
+			#endif
+			Warning ("Awake", true);
 		}
 
 		// Initialisation des variables
@@ -51,27 +52,34 @@ namespace QuickScroll {
 			QSettings.Instance.Load ();
 			#if GUI
 			BlizzyToolbar.Start ();
-			StartCoroutine (StockToolbar.AppLauncherReady ());
 			#endif
+			#if SHORTCUT
 			QShortCuts.VerifyKey ();
-			if (HighLogic.LoadedSceneIsEditor) {
-				QCategory.PartListTooltipsTWEAK (false);
-			}
+			#endif
+			QCategory.PartListTooltipsTWEAK (false);
+			#if SCROLL
+			PartCategorizer.Instance.scrollListSub.scrollList.scrollWheelFactor = 0;
+			PartCategorizer.Instance.scrollListMain.scrollList.scrollWheelFactor = 0;
+			#endif
+			Warning ("Start", true);
 		}
 
 		#if GUI
 		// Arrêter le plugin
 		private void OnDestroy() {
 			BlizzyToolbar.OnDestroy ();
-			GameEvents.onGUIApplicationLauncherDestroyed.Remove (StockToolbar.AppLauncherDestroyed);
-			GameEvents.onGameSceneLoadRequested.Remove (StockToolbar.AppLauncherDestroyed);
-			GameEvents.onGUIApplicationLauncherUnreadifying.Remove (StockToolbar.AppLauncherDestroyed);
+			Warning ("OnDestroy", true);
 		}
 		#endif
 
 		// Gérer les raccourcis
 		private void Update() {
+			#if SHORTCUT
 			QShortCuts.Update ();
+			#endif
+			#if SCROLL
+			QScroll.Update ();
+			#endif
 		}
 
 		private void LateUpdate() {

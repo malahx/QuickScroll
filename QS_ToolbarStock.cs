@@ -21,19 +21,56 @@ using System.Collections;
 using UnityEngine;
 
 namespace QuickScroll {
-	public class QStockToolbar {
-	
+	[KSPAddon(KSPAddon.Startup.MainMenu, true)]
+	public class QStockToolbar : MonoBehaviour {
+
 		internal static bool Enabled {
 			get {
 				return QSettings.Instance.StockToolBar;
 			}
 		}
 
+		private static bool CanUseIt {
+			get {
+				return HighLogic.LoadedSceneIsGame;
+			}
+		}
+		
 		private ApplicationLauncher.AppScenes AppScenes = ApplicationLauncher.AppScenes.SPH | ApplicationLauncher.AppScenes.VAB;
-		private static string TexturePath = Quick.MOD + "/Textures/StockToolBar";
+		private static string TexturePath = QuickScroll.MOD + "/Textures/StockToolBar";
 
-		private void OnClick() { 
-			QGUI.Settings ();
+		private void OnTrue () {
+			if (QGUI.WindowSettings) {
+				return;
+			}
+			QGUI.ShowSettings ();
+			QuickScroll.Warning ("QStockToolbar.OnTrue", true);
+		}
+
+		private void OnFalse () {
+			if (!QGUI.WindowSettings) {
+				return;
+			}
+			QGUI.HideSettings ();
+			QuickScroll.Warning ("QStockToolbar.OnFalse", true);
+		}
+
+		private void OnHover () {
+			if (QGUI.WindowSettings) {
+				return;
+			}
+			QGUI.ShowSettings ();
+			QuickScroll.Warning ("QStockToolbar.OnHover", true);
+		}
+
+		private void OnHoverOut () {
+			if (!QGUI.WindowSettings) {
+				return;
+			}
+			if (!isTrue && !isHovering) {
+				QGUI.HideSettings ();
+			}
+			QuickScroll.Warning ("QStockToolbar.OnHoverOut", true);
 		}
 			
 		private Texture2D GetTexture {
@@ -50,41 +87,104 @@ namespace QuickScroll {
 			}
 		}
 
-		internal IEnumerator AppLauncherReady() {
-			if (!Enabled || !HighLogic.LoadedSceneIsGame) {
-				yield break;
+		internal bool isActive {
+			get {
+				return appLauncherButton != null && isAvailable;
 			}
-			while (!isAvailable) {
-				yield return 0;
+		}
+
+		internal bool isHovering {
+			get {
+				if (appLauncherButton == null || !QGUI.WindowSettings) {
+					return false;
+				}
+				Rect _rect = QGUI.RectSettings;
+				_rect.height += 3;
+				return appLauncherButton.toggleButton.IsHovering || _rect.Contains (Mouse.screenPos);
+			}
+		}
+
+		internal bool isTrue {
+			get {
+				if (appLauncherButton == null) {
+					return false;
+				}
+				return appLauncherButton.State == RUIToggleButton.ButtonState.TRUE;
+			}
+		}
+
+		internal bool isFalse {
+			get {
+				if (appLauncherButton == null) {
+					return false;
+				}
+				return appLauncherButton.State == RUIToggleButton.ButtonState.FALSE;
+			}
+		}
+
+		internal static QStockToolbar Instance {
+			get;
+			private set;
+		}
+
+		private void Awake() {
+			if (Instance != null) {
+				Destroy (this);
+				return;
+			}
+			Instance = this;
+			DontDestroyOnLoad (Instance);
+			GameEvents.onGUIApplicationLauncherReady.Add (AppLauncherReady);
+			GameEvents.onGUIApplicationLauncherDestroyed.Add (AppLauncherDestroyed);
+			GameEvents.onLevelWasLoadedGUIReady.Add (AppLauncherDestroyed);
+			QuickScroll.Warning ("QStockToolbar.Awake", true);
+		}
+			
+		private void AppLauncherReady() {
+			QSettings.Instance.Load ();
+			if (!Enabled) {
+				return;
 			}
 			Init ();
+			QuickScroll.Warning ("QStockToolbar.AppLauncherReady", true);
 		}
 
-		internal void AppLauncherDestroyed(GameScenes gameScenes) {
-			AppLauncherDestroyed ();
-		}
-
-		internal void AppLauncherDestroyed() {
+		private void AppLauncherDestroyed(GameScenes gameScene) {
+			if (CanUseIt) {
+				return;
+			}
 			Destroy ();
+			QuickScroll.Warning ("QStockToolbar.onLevelWasLoadedGUIReady", true);
+		}
+		
+		private void AppLauncherDestroyed() {
+			Destroy ();
+			QuickScroll.Warning ("QStockToolbar.onGUIApplicationLauncherDestroyed", true);
+		}
+
+		private void OnDestroy() {
+			GameEvents.onGUIApplicationLauncherReady.Remove (AppLauncherReady);
+			GameEvents.onGUIApplicationLauncherDestroyed.Remove (AppLauncherDestroyed);
+			GameEvents.onLevelWasLoadedGUIReady.Remove (AppLauncherDestroyed);
+			QuickScroll.Warning ("QStockToolbar.OnDestroy", true);
 		}
 
 		private void Init() {
-			if (!isAvailable) {
+			if (!isAvailable || !CanUseIt) {
 				return;
 			}
 			if (appLauncherButton == null) {
-				appLauncherButton = ApplicationLauncher.Instance.AddModApplication (OnClick, OnClick, null, null, null, null, AppScenes, GetTexture);
+				appLauncherButton = ApplicationLauncher.Instance.AddModApplication (new RUIToggleButton.OnTrue (this.OnTrue), new RUIToggleButton.OnFalse (this.OnFalse), new RUIToggleButton.OnHover (this.OnHover), new RUIToggleButton.OnHoverOut (this.OnHoverOut), null, null, AppScenes, GetTexture);
 			}
+			QuickScroll.Warning ("QStockToolbar.Init", true);
 		}
 
 		private void Destroy() {
-			if (!isAvailable) {
-				return;
-			}
 			if (appLauncherButton != null) {
 				ApplicationLauncher.Instance.RemoveModApplication (appLauncherButton);
 				appLauncherButton = null;
 			}
+			QuickScroll.Warning ("QStockToolbar.Destroy", true);
 		}
 
 		internal void Set(bool SetTrue, bool force = false) {
@@ -102,6 +202,7 @@ namespace QuickScroll {
 					}
 				}
 			}
+			QuickScroll.Warning ("QStockToolbar.Set", true);
 		}
 
 		internal void Reset() {
@@ -114,6 +215,7 @@ namespace QuickScroll {
 			if (Enabled) {
 				Init ();
 			}
+			QuickScroll.Warning ("QStockToolbar.Reset", true);
 		}
 	}
 }

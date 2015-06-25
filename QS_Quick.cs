@@ -21,19 +21,27 @@ using System.Reflection;
 using UnityEngine;
 
 namespace QuickScroll {
-	public class Quick : MonoBehaviour {
+	public partial class QuickScroll : MonoBehaviour {
 
 		public readonly static string VERSION = Assembly.GetAssembly(typeof(QuickScroll)).GetName().Version.Major + "." + Assembly.GetAssembly(typeof(QuickScroll)).GetName().Version.Minor + Assembly.GetAssembly(typeof(QuickScroll)).GetName().Version.Build;
 		public readonly static string MOD = Assembly.GetAssembly(typeof(QuickScroll)).GetName().Name;
-		private static bool isdebug = true;
-		internal static void Log(string msg) {
-			if (isdebug) {
-				Debug.Log (MOD + "(" + VERSION + "): " + msg);
+
+		internal static void Log(string _string, bool debug = false) {
+			if (!debug) {
+				Debug.Log (MOD + "(" + VERSION + "): " + _string);
+			} else {
+				#if DEBUG
+				Debug.Log (MOD + "(" + VERSION + "): " + _string);
+				#endif
 			}
 		}
-		internal static void Warning(string msg) {
-			if (isdebug) {
-				Debug.LogWarning (MOD + "(" + VERSION + "): " + msg);
+		internal static void Warning(string _string, bool debug = false) {
+			if (!debug) {
+				Debug.LogWarning (MOD + "(" + VERSION + "): " + _string);
+			} else {
+				#if DEBUG
+				Debug.LogWarning (MOD + "(" + VERSION + "): " + _string);
+				#endif
 			}
 		}
 	}

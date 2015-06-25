@@ -27,7 +27,7 @@ namespace QuickScroll {
 				return QSettings.Instance.BlizzyToolBar;
 			}
 		}
-		private string TexturePath = Quick.MOD + "/Textures/BlizzyToolBar";
+		private string TexturePath = QuickScroll.MOD + "/Textures/BlizzyToolBar";
 		public static GameScenes[] AppScenes = {
 			GameScenes.EDITOR
 		};
@@ -47,11 +47,12 @@ namespace QuickScroll {
 			if (!HighLogic.LoadedSceneIsGame || !isAvailable || !Enabled || Button != null) {
 				return;
 			}
-			Button = ToolbarManager.Instance.add (Quick.MOD, Quick.MOD);
+			Button = ToolbarManager.Instance.add (QuickScroll.MOD, QuickScroll.MOD);
 			Button.TexturePath = TexturePath;
-			Button.ToolTip = Quick.MOD + ": Settings";
+			Button.ToolTip = QuickScroll.MOD + ": Settings";
 			Button.OnClick += (e) => OnClick ();
 			Button.Visibility = new GameScenesVisibility(AppScenes);
+			QuickScroll.Warning ("QBlizzyToolbar.Start", true);
 		}
 
 		internal void OnDestroy() {
@@ -60,6 +61,7 @@ namespace QuickScroll {
 			}
 			Button.Destroy ();
 			Button = null;
+			QuickScroll.Warning ("QBlizzyToolbar.OnDestroy", true);
 		}
 
 		internal void Reset() {
@@ -68,6 +70,7 @@ namespace QuickScroll {
 			} else {
 				OnDestroy ();
 			}
+			QuickScroll.Warning ("QBlizzyToolbar.Reset", true);
 		}
 	}
 }

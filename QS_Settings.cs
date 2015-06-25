@@ -25,46 +25,53 @@ namespace QuickScroll {
 
 		public static QSettings Instance = new QSettings ();
 
-		private string FileConfig = KSPUtil.ApplicationRootPath + "GameData/" + Quick.MOD + "/Config.txt";
+		private string FileConfig = KSPUtil.ApplicationRootPath + "GameData/" + QuickScroll.MOD + "/Config.txt";
 
 		#if GUI
 		[Persistent] public bool StockToolBar = true;
 		[Persistent] public bool BlizzyToolBar = true;
 		#endif
 
-		[Persistent] internal bool EnableWheelScroll = true;
-		[Persistent] internal bool EnableWheelShortCut = true;
-		[Persistent] internal bool EnableKeyShortCut = true;
+		[Persistent] internal bool EnableWheelBlockTopEnd = true;
 		[Persistent] internal bool EnableTWEAKPartListTooltips = false;
 
 		[Persistent] internal string KeyPartListTooltipsActivate = "mouse 1";
 		[Persistent] internal string KeyPartListTooltipsDisactivate = "mouse 0";
 
-		[Persistent] internal KeyCode ModKeyFilterWheel;
-		[Persistent] internal KeyCode ModKeyCategoryWheel;
+		#if SCROLL
+		[Persistent] internal bool EnableWheelScroll = true;
+		[Persistent] internal bool EnableWheelShortCut = true;
+		#endif
 
-		[Persistent] internal KeyCode ModKeyShortCut;
+		#if SHORTCUT
+		[Persistent] internal bool EnableKeyShortCut = true;
 
-		[Persistent] internal KeyCode KeyFilterPrevious;
-		[Persistent] internal KeyCode KeyFilterNext;
-		[Persistent] internal KeyCode KeyCategoryPrevious;
-		[Persistent] internal KeyCode KeyCategoryNext;
-		[Persistent] internal KeyCode KeyPagePrevious;
-		[Persistent] internal KeyCode KeyPageNext;
-		[Persistent] internal KeyCode KeyPods;
-		[Persistent] internal KeyCode KeyFuelTanks;
-		[Persistent] internal KeyCode KeyEngines;
-		[Persistent] internal KeyCode KeyCommandNControl;
-		[Persistent] internal KeyCode KeyStructural;
-		[Persistent] internal KeyCode KeyAerodynamics;
-		[Persistent] internal KeyCode KeyUtility;
-		[Persistent] internal KeyCode KeySciences;
+		[Persistent] internal KeyCode ModKeyFilterWheel 		= QShortCuts.DefaultKey(QKey.Key.ModKeyFilterWheel);
+		[Persistent] internal KeyCode ModKeyCategoryWheel 		= QShortCuts.DefaultKey(QKey.Key.ModKeyCategoryWheel);
+
+		[Persistent] internal KeyCode ModKeyShortCut 			= QShortCuts.DefaultKey(QKey.Key.ModKeyShortCut);
+
+		[Persistent] internal KeyCode KeyFilterPrevious 		= QShortCuts.DefaultKey(QKey.Key.FilterPrevious);
+		[Persistent] internal KeyCode KeyFilterNext 			= QShortCuts.DefaultKey(QKey.Key.FilterNext);
+		[Persistent] internal KeyCode KeyCategoryPrevious 		= QShortCuts.DefaultKey(QKey.Key.CategoryPrevious);
+		[Persistent] internal KeyCode KeyCategoryNext 			= QShortCuts.DefaultKey(QKey.Key.CategoryNext);
+		[Persistent] internal KeyCode KeyPagePrevious 			= QShortCuts.DefaultKey(QKey.Key.PagePrevious);
+		[Persistent] internal KeyCode KeyPageNext 				= QShortCuts.DefaultKey(QKey.Key.PageNext);
+		[Persistent] internal KeyCode KeyPods 					= QShortCuts.DefaultKey(QKey.Key.Pods);
+		[Persistent] internal KeyCode KeyFuelTanks 				= QShortCuts.DefaultKey(QKey.Key.FuelTanks);
+		[Persistent] internal KeyCode KeyEngines 				= QShortCuts.DefaultKey(QKey.Key.Engines);
+		[Persistent] internal KeyCode KeyCommandNControl 		= QShortCuts.DefaultKey(QKey.Key.CommandNControl);
+		[Persistent] internal KeyCode KeyStructural 			= QShortCuts.DefaultKey(QKey.Key.Structural);
+		[Persistent] internal KeyCode KeyAerodynamics 			= QShortCuts.DefaultKey(QKey.Key.Aerodynamics);
+		[Persistent] internal KeyCode KeyUtility 				= QShortCuts.DefaultKey(QKey.Key.Utility);
+		[Persistent] internal KeyCode KeySciences 				= QShortCuts.DefaultKey(QKey.Key.Sciences);
+		#endif
 
 		// GESTION DE LA CONFIGURATION
 		public void Save() {
 			ConfigNode _temp = ConfigNode.CreateConfigFromObject(this, new ConfigNode());
 			_temp.Save(FileConfig);
-			Quick.Log ("Settings Saved");
+			QuickScroll.Log ("Settings Saved");
 		}
 		public void Load() {
 			if (File.Exists (FileConfig)) {
@@ -74,7 +81,7 @@ namespace QuickScroll {
 				} catch {
 					Save ();
 				}
-				Quick.Log ("Settings Loaded");
+				QuickScroll.Log ("Settings Loaded");
 			} else {
 				Save ();
 			}

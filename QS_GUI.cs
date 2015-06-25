@@ -27,54 +27,82 @@ namespace QuickScroll {
 		internal static Rect RectSettings = new Rect();
 
 		internal static void Awake() {
-			RectSettings = new Rect (0, 0, 615, 214);
+			RectSettings = new Rect (0, 0, 615, 0);
 			RefreshRect ();
 		}
 
 		internal static void RefreshRect() {
-			RectSettings.x = (Screen.width - RectSettings.width) / 2;
-			RectSettings.y = (Screen.height - RectSettings.height) / 2;
+			if (!QSettings.Instance.StockToolBar) {
+				RectSettings.x = (Screen.width - RectSettings.width) / 2;
+				RectSettings.y = (Screen.height - RectSettings.height) / 2;
+				return;
+			}
+			RectSettings.x = Screen.width - RectSettings.width - 75;
+			RectSettings.y = Screen.height - RectSettings.height - 40;
 		}
 
 		private static void Lock(bool activate, ControlTypes Ctrl = ControlTypes.None) {
 			if (HighLogic.LoadedSceneIsEditor) {
 				if (activate) {
-					EditorLogic.fetch.Lock (true, true, true, "Lock" + Quick.MOD);
+					EditorLogic.fetch.Lock (true, true, true, "Lock" + QuickScroll.MOD);
 				} else {
-					EditorLogic.fetch.Unlock ("Lock" + Quick.MOD);
+					EditorLogic.fetch.Unlock ("Lock" + QuickScroll.MOD);
 				}
 			}
 			if (!activate) {
-				InputLockManager.RemoveControlLock ("Lock" + Quick.MOD);
+				InputLockManager.RemoveControlLock ("Lock" + QuickScroll.MOD);
 			}
 		}
 
 		public static void Settings() {
-			SettingsSwitch ();
+			WindowSettings = !WindowSettings;
+			Switch (WindowSettings);
 			if (!WindowSettings) {
-				QCategory.PartListTooltipsTWEAK (false);
-				QuickScroll.StockToolbar.Reset ();
-				QuickScroll.BlizzyToolbar.Reset ();
-				QSettings.Instance.Save ();
+				Save ();
 			}
+			QuickScroll.Warning ("Settings", true);
 		}
 
-		internal static void SettingsSwitch() {
-			WindowSettings = !WindowSettings;
-			QuickScroll.StockToolbar.Set (WindowSettings);
+		internal static void Switch(bool set) {
+			QStockToolbar.Instance.Set (WindowSettings);
 			Lock (WindowSettings);
 		}
 
-		internal static void OnGUI() {
-			if (WindowSettings) {
-				GUI.skin = HighLogic.Skin;
-				RefreshRect ();
-				RectSettings = GUILayout.Window (1545145, RectSettings, DrawSettings, Quick.MOD + " " + Quick.VERSION, GUILayout.Width (RectSettings.width), GUILayout.ExpandHeight (true));
-			}
+		internal static void HideSettings() {
+			WindowSettings = false;
+			Switch (false);
+			Save ();
+			QuickScroll.Warning ("HideSettings", true);
 		}
+
+		internal static void ShowSettings() {
+			WindowSettings = true;
+			Lock (true);
+			QuickScroll.Warning ("ShowSettings", true);
+		}
+
+		private static void Save() {
+			QCategory.PartListTooltipsTWEAK (false);
+			QStockToolbar.Instance.Reset ();
+			QuickScroll.BlizzyToolbar.Reset ();
+			QSettings.Instance.Save ();
+		}
+
+		internal static void OnGUI() {
+			if (!WindowSettings) {
+				return;
+			}
+			GUI.skin = HighLogic.Skin;
+			RefreshRect ();
+			if (!QStockToolbar.Instance.isTrue && !QStockToolbar.Instance.isHovering) {
+				HideSettings ();
+				return;
+			}
+			RectSettings = GUILayout.Window (1545145, RectSettings, DrawSettings, QuickScroll.MOD + " " + QuickScroll.VERSION, GUILayout.Width (RectSettings.width), GUILayout.ExpandHeight (true));
+		}
+
 		// Panneau de configuration
 		private static void DrawSettings(int id) {
-			int _rect = 214;
 			GUILayout.BeginVertical ();
 
 			GUILayout.BeginHorizontal ();
@@ -83,13 +111,34 @@ namespace QuickScroll {
 			GUILayout.Space (5);
 
 			GUILayout.BeginHorizontal ();
-			QSettings.Instance.EnableWheelScroll = GUILayout.Toggle (QSettings.Instance.EnableWheelScroll, "Enable Wheel Scroll", GUILayout.Width (300));
-			QSettings.Instance.EnableWheelShortCut = GUILayout.Toggle (QSettings.Instance.EnableWheelShortCut, "Enable Shortcut with Wheel Scroll", GUILayout.Width (300));
+			bool _enableWheelScroll = GUILayout.Toggle (QSettings.Instance.EnableWheelScroll, "Enable Wheel Scroll", GUILayout.Width (300));
+			bool _enableWheelShortCut = GUILayout.Toggle (QSettings.Instance.EnableWheelShortCut, "Enable Shortcut with Wheel Scroll", GUILayout.Width (300));
+			if (_enableWheelScroll && _enableWheelShortCut != QSettings.Instance.EnableWheelShortCut) {
+				RectSettings.height = 0;
+			}
+			if (_enableWheelScroll != QSettings.Instance.EnableWheelScroll) {
+				QSettings.Instance.EnableWheelScroll = _enableWheelScroll;
+				RectSettings.height = 0;
+			}
+			if (_enableWheelShortCut != QSettings.Instance.EnableWheelShortCut) {
+				QSettings.Instance.EnableWheelShortCut = _enableWheelShortCut;
+			}
 			GUILayout.EndHorizontal ();
 			GUILayout.Space (5);
 
+			if (QSettings.Instance.EnableWheelScroll) {
+				GUILayout.BeginHorizontal ();
+				QSettings.Instance.EnableWheelBlockTopEnd = GUILayout.Toggle (QSettings.Instance.EnableWheelBlockTopEnd, "Enable the blocking of scrolling at the beggining or the end of a category", GUILayout.Width (300));
+				GUILayout.EndHorizontal ();
+				GUILayout.Space (5);
+			}
+
 			GUILayout.BeginHorizontal ();
-			QSettings.Instance.EnableKeyShortCut = GUILayout.Toggle (QSettings.Instance.EnableKeyShortCut, "Enable Keyboard Shortcut", GUILayout.Width (300));
+			bool _enableKeyShortCut = GUILayout.Toggle (QSettings.Instance.EnableKeyShortCut, "Enable Keyboard Shortcut", GUILayout.Width (300));
+			if (_enableKeyShortCut != QSettings.Instance.EnableKeyShortCut) {
+				QSettings.Instance.EnableKeyShortCut = _enableKeyShortCut;
+				RectSettings.height = 0;
+			}
 			QSettings.Instance.EnableTWEAKPartListTooltips = GUILayout.Toggle (QSettings.Instance.EnableTWEAKPartListTooltips, "Enable the tweak for PartListTooltips", GUILayout.Width (300));
 			GUILayout.EndHorizontal ();
 			GUILayout.Space (5);
@@ -103,7 +152,6 @@ namespace QuickScroll {
 			GUILayout.Space (5);
 
 			if (QSettings.Instance.EnableWheelScroll && QSettings.Instance.EnableWheelShortCut) {
-				_rect += 68;
 
 				GUILayout.BeginHorizontal ();
 				GUILayout.Box ("Modifier Keyboard for Scrolling", GUILayout.Height (30));
@@ -119,7 +167,6 @@ namespace QuickScroll {
 
 			}
 			if (QSettings.Instance.EnableKeyShortCut) {
-				_rect += 307;
 
 				GUILayout.BeginHorizontal ();
 				GUILayout.Box ("Keyboard ShortCuts", GUILayout.Height (30));
@@ -180,13 +227,12 @@ namespace QuickScroll {
 			}
 			if (GUILayout.Button ("Close", GUILayout.Height (30))) {
 				QShortCuts.VerifyKey ();
-				Settings ();
+				HideSettings ();
 			}
 			GUILayout.BeginHorizontal ();
 			GUILayout.Space (5);
 			GUILayout.EndHorizontal ();
 			GUILayout.EndVertical ();
-			RectSettings.height = _rect;
 		}
 	}
 }

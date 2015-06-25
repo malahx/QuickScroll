@@ -33,12 +33,6 @@ namespace QuickScroll {
 		}
 
 		// Indiquer quel filtre est sélectionné
-		public static int CurrentFilterIndex {
-			get {
-				return Filters.FindIndex(f => f.button.activeButton.State == RUIToggleButtonTyped.ButtonState.TRUE);
-			}
-		}
-
 		public static PartCategorizer.Category CurrentFilter {
 			get {
 				return Filters.Find(f => f.button.activeButton.State == RUIToggleButtonTyped.ButtonState.TRUE);
@@ -53,13 +47,13 @@ namespace QuickScroll {
 		}
 
 		// Indiquer quel catégorie est sélectionnée
-		public static int CurrentCategoryIndex {
+		public static PartCategorizer.Category CurrentCategory {
 			get {
-				return Categories.FindIndex(c => c.button.activeButton.State == RUIToggleButtonTyped.ButtonState.TRUE);
+				return Categories.Find(f => f.button.activeButton.State == RUIToggleButtonTyped.ButtonState.TRUE);
 			}
 		}
 
-		// Sélectionner la catégorie/filtre suivant
+		// Sélectionner le filtre ou la catégorie suivant
 		public static PartCategorizer.Category NextCategory(List<PartCategorizer.Category> categories, int index) {
 			if (index >= categories.Count -1) {
 				index = -1;
@@ -68,7 +62,7 @@ namespace QuickScroll {
 			return categories[index];
 		}
 
-		// Sélectionner la catégorie/filtre précédent
+		// Sélectionner le filtre ou la catégorie précédent
 		public static PartCategorizer.Category PrevCategory(List<PartCategorizer.Category> categories, int index) {
 			if (index <= 0) {
 				index = categories.Count;
@@ -78,30 +72,82 @@ namespace QuickScroll {
 		}
 
 		// Changer de page
-		internal static void SelectPartPage(float scroll) {
-			if (scroll > 0)
+		internal static void SelectPartPage(bool dirScrolling) {
+			if (dirScrolling) {
+				if (!EditorPartList.Instance.prevPage.gameObject.activeSelf) {
+					if (!QSettings.Instance.EnableWheelBlockTopEnd) {
+						while (EditorPartList.Instance.nextPage.gameObject.activeSelf) {
+							EditorPartList.Instance.NextPage ();
+						}
+					}
+					return;
+				}
 				EditorPartList.Instance.PrevPage ();
-			if (scroll < 0)
+			} else {
+				if (!EditorPartList.Instance.nextPage.gameObject.activeSelf) {
+					if (!QSettings.Instance.EnableWheelBlockTopEnd) {
+						while (EditorPartList.Instance.prevPage.gameObject.activeSelf) {
+							EditorPartList.Instance.PrevPage ();
+						}
+					}
+					return;
+				}
 				EditorPartList.Instance.NextPage ();
+			}
+			QuickScroll.Warning ("SelectPartPage " + (dirScrolling ? "PrevPage" : "NextPage"), true);
 			PartListTooltipsTWEAK (false);
 		}
 
 		// Changer de catégorie
-		internal static void SelectPartCategory(float scroll) {
-			int _index = CurrentCategoryIndex;
-			PartCategorizer.Category _category = (scroll > 0 ? PrevCategory (Categories, _index) : NextCategory (Categories, _index));
-			RUIToggleButtonTyped _btn = _category.button.activeButton;
-			_btn.SetTrue (_btn, RUIToggleButtonTyped.ClickType.FORCED, true);
-			PartListTooltipsTWEAK (false);
+		internal static void SelectPartCategory(bool dirScrolling) {
+			SelectPartCategory (dirScrolling, Categories, CurrentCategory, PartCategorizer.Instance.scrollListSub.scrollList);
 		}
 
 		// Changer de filtre
-		internal static void SelectPartFilter(float scroll) {
-			int _index = CurrentFilterIndex;
-			PartCategorizer.Category _category = (scroll > 0 ? PrevCategory (Filters, _index) : NextCategory (Filters, _index));
+		internal static void SelectPartFilter(bool dirScrolling) {
+			SelectPartCategory (dirScrolling, Filters, CurrentFilter, PartCategorizer.Instance.scrollListMain.scrollList);
+		}
+
+		// Changer de filtre/catégorie
+		internal static void SelectPartCategory(bool dirScrolling, List<PartCategorizer.Category> categories, PartCategorizer.Category currentCategory, UIScrollList scrollList) {
+			int _index = currentCategory.button.container.Index;
+			if (QSettings.Instance.EnableWheelBlockTopEnd) {
+				if (dirScrolling && _index == 0) {
+					return;
+				}
+				if (!dirScrolling && _index == categories.Count - 1) {
+					return;
+				}
+			}
+			QuickScroll.Warning ("categories.Count " + categories.Count);
+			PartCategorizer.Category _category = (dirScrolling ? PrevCategory (categories, _index) : NextCategory (categories, _index));
 			RUIToggleButtonTyped _btn = _category.button.activeButton;
-			_btn.SetTrue (_btn, RUIToggleButtonTyped.ClickType.FORCED, true);	
+			_btn.SetTrue (_btn, RUIToggleButtonTyped.ClickType.FORCED, true);
+			ScrollList (dirScrolling, scrollList, _category);
+			QuickScroll.Warning ("SelectPartCategory " + (dirScrolling ? "Prev" : "Next"), true);
 			PartListTooltipsTWEAK (false);
+		}
+
+		// Améliorer le scroll par défaut
+		internal static void ScrollList(bool dirScrolling, UIScrollList scrollList, PartCategorizer.Category category) {
+			int _lastposition = (scrollList.Count +2) * 34;
+			if (_lastposition < scrollList.viewableArea.y) {
+				return;
+			}
+			int _index = category.button.container.Index;
+			float _position = (_index +1) * 34;
+			if (_position > scrollList.viewableArea.y / 2 && _lastposition - _position > scrollList.viewableArea.y / 2) {
+				scrollList.ScrollToItem (_index, 0);
+				return;
+			}
+			if (_position < scrollList.viewableArea.y / 2) {
+				scrollList.ScrollListTo (0f);
+				return;
+			}
+			if (_lastposition - _position < scrollList.viewableArea.y / 2) {
+				scrollList.ScrollListTo (1f);
+				return;
+			}
 		}
 
 		// Selectionner une categorie
@@ -118,6 +164,7 @@ namespace QuickScroll {
 			if (_btn.State == RUIToggleButtonTyped.ButtonState.FALSE) {
 				_btn.SetTrue (_btn, RUIToggleButtonTyped.ClickType.FORCED, true);
 			}
+			QuickScroll.Warning ("ForceSelectTab " + _category.button.categoryName, true);
 			PartListTooltipsTWEAK (false);
 		}
 
@@ -141,6 +188,7 @@ namespace QuickScroll {
 					}
 				}
 			}
+			QuickScroll.Warning ("PartListTooltipsTWEAK " + enable, true);
 		}
 		internal static void PartListTooltipsTWEAK() {
 			if (HighLogic.LoadedSceneIsEditor) {

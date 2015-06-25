@@ -8,21 +8,30 @@
     <RootNamespace>QuickScroll</RootNamespace>
     <AssemblyName>QuickScroll</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ReleaseVersion>1.22</ReleaseVersion>
+    <ReleaseVersion>1.30</ReleaseVersion>
+    <Description>#### QuickScroll
+#### A plugin for Kerbal Space Program
+#### Copyright 2015 Malah
+</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;GUI;SHORTCUT;SCROLL;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="./install.sh" />
+      </CustomCommands>
+    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
+    <OutputPath>bin\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -32,15 +41,16 @@
       </CustomCommands>
     </CustomCommands>
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>GUI</DefineConstants>
+    <DefineConstants>GUI;SHORTCUT;SCROLL;</DefineConstants>
+    <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\lib\1.02\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\lib\1.0.4\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\lib\1.02\UnityEngine.dll</HintPath>
+      <HintPath>..\lib\1.0.4\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +65,7 @@
     <Compile Include="QS_Key.cs" />
     <Compile Include="QS_ToolbarBlizzy.cs" />
     <Compile Include="QS_ToolbarStock.cs" />
+    <Compile Include="QS_Scroll.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -1,5 +1,5 @@
 ﻿#### QuickScroll
-#### A plugin for Kerbal Space Program 1.0.2
+#### A plugin for Kerbal Space Program 1.0.X
 #### Copyright 2015 Malah
 
 This program is free software: you can redistribute it and/or modify
@@ -47,18 +47,32 @@ Delete the QuickScroll folder in your KSP/GameData folder.
 
 #### Changelog
 
+v1.30 - 2015.06.25
+* New: Added an option to block the scrolling at the beginning and at the end of a category (enabled by default),
+* New: Added scroll to enable simple/advanced mode,
+* New: Added a button to return to the default key assignment,
+* Fix: Corrected the key assignment to accept special's key,
+* Fix: Corrected the stock scrolling when there are many categories/filters (thanks to Alewx to remind me of this old bug which I had forgot to correct),
+* Fix: Corrected the part page scroll which always block at the beggining / end of the pages,
+* Fix: Changed the default key for Modifier Keyboard to Keypad Enter,
+* Fix: Enhanced the Stock Toolbar,
+* Fix: Some other minor fixes,
+* Optional: Added an optional version of QuickScroll with only the mouse scrolling,
+* Optional: Added an optional version of QuickScroll with only the keyboard shortcuts,
+* Updated to KSP 1.0.X
+
 v1.22 - 2015.05.03
 * Fix: Corrected the Stock Toolbar which can show two buttons,
 * Updated ToolbarWrapper to 1.7.9
-* Updated to KSP 1.02
+* Updated to KSP 1.0.2
 
 v1.21 - 2015.04.28
 * Fix: Converted textures to DDS,
 * Fix: Corrected the Stock Toolbar icon not being created,
 * Fix: Corrected the loading of the config file (thanks Tarheel1999),
 * Fix: Some minor bug,
-* Optionnal: Added an optionnal version of QuickScroll without GUI and Stock/Blizzy Toolbar support,
-* Updated to KSP 1.00
+* Optional: Added an optional version of QuickScroll without GUI and Stock/Blizzy Toolbar support,
+* Updated to KSP 1.0.0
 
 v1.20 - 2015.03.06
 * New: Added a GUI to config the shortcuts,
@@ -82,10 +96,6 @@ v1.00 - 2014.12.25
 
 v0.10 - 2014.12.21
 * Initial release
-
-#### Planned updates/new features
-
-* Correct the stock scrolling when there is many categories/filters,
 
 #### Troubleshooting?
 
