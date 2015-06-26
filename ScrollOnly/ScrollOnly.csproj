@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>QuickScroll</RootNamespace>
     <AssemblyName>QuickScroll</AssemblyName>
-    <ReleaseVersion>1.30</ReleaseVersion>
+    <ReleaseVersion>1.31</ReleaseVersion>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <Description>#### QuickScroll
 #### A plugin for Kerbal Space Program

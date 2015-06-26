@@ -119,7 +119,6 @@ namespace QuickScroll {
 					return;
 				}
 			}
-			QuickScroll.Warning ("categories.Count " + categories.Count);
 			PartCategorizer.Category _category = (dirScrolling ? PrevCategory (categories, _index) : NextCategory (categories, _index));
 			RUIToggleButtonTyped _btn = _category.button.activeButton;
 			_btn.SetTrue (_btn, RUIToggleButtonTyped.ClickType.FORCED, true);

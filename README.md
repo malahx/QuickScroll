@@ -47,6 +47,9 @@ Delete the QuickScroll folder in your KSP/GameData folder.
 
 #### Changelog
 
+v1.31 - 2015.06.26
+* Fix: Deleted the debug warning.
+
 v1.30 - 2015.06.25
 * New: Added an option to block the scrolling at the beginning and at the end of a category (enabled by default),
 * New: Added scroll to enable simple/advanced mode,
