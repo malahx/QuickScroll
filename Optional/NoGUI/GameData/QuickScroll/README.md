@@ -47,6 +47,11 @@ Delete the QuickScroll folder in your KSP/GameData folder.
 
 #### Changelog
 
+v1.32 - 2015.10.14
+* New: Added an option to disable the hovering on the Stock Toolbar,
+* Fix: Corrected the position of the scroll of the partlist,
+* Fix: Locked the parts scrolling when the PartToolTips is pinned (we now can scroll the part info).
+
 v1.31 - 2015.06.26
 * Fix: Deleted the debug warning.
 

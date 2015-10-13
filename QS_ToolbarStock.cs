@@ -56,7 +56,7 @@ namespace QuickScroll {
 		}
 
 		private void OnHover () {
-			if (QGUI.WindowSettings) {
+			if (QGUI.WindowSettings || !QSettings.Instance.StockToolBarHovering) {
 				return;
 			}
 			QGUI.ShowSettings ();
@@ -64,7 +64,7 @@ namespace QuickScroll {
 		}
 
 		private void OnHoverOut () {
-			if (!QGUI.WindowSettings) {
+			if (!QGUI.WindowSettings || !QSettings.Instance.StockToolBarHovering) {
 				return;
 			}
 			if (!isTrue && !isHovering) {

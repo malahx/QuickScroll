@@ -30,6 +30,7 @@ namespace QuickScroll {
 		#if GUI
 		[Persistent] public bool StockToolBar = true;
 		[Persistent] public bool BlizzyToolBar = true;
+		[Persistent] public bool StockToolBarHovering = false;
 		#endif
 
 		[Persistent] internal bool EnableWheelBlockTopEnd = true;

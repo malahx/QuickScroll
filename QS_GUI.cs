@@ -144,9 +144,17 @@ namespace QuickScroll {
 			GUILayout.Space (5);
 
 			GUILayout.BeginHorizontal ();
-			QSettings.Instance.StockToolBar = GUILayout.Toggle (QSettings.Instance.StockToolBar, "Use the Stock ToolBar", GUILayout.Width (300));
+			QSettings.Instance.StockToolBar = GUILayout.Toggle (QSettings.Instance.StockToolBar, "Use the Stock Toolbar", GUILayout.Width (300));
 			if (QBlizzyToolbar.isAvailable) {
-				QSettings.Instance.BlizzyToolBar = GUILayout.Toggle (QSettings.Instance.BlizzyToolBar, "Use the Blizzy ToolBar", GUILayout.Width (300));
+				QSettings.Instance.BlizzyToolBar = GUILayout.Toggle (QSettings.Instance.BlizzyToolBar, "Use the Blizzy's Toolbar", GUILayout.Width (300));
+			}
+			if (QSettings.Instance.StockToolBar) {
+				if (QBlizzyToolbar.isAvailable) {
+					GUILayout.EndHorizontal ();
+					GUILayout.Space (5);
+					GUILayout.BeginHorizontal ();
+				}
+				QSettings.Instance.StockToolBarHovering = GUILayout.Toggle (QSettings.Instance.StockToolBarHovering, "Enable the Stock Toolbar Hovring", GUILayout.Width (300));
 			}
 			GUILayout.EndHorizontal ();
 			GUILayout.Space (5);

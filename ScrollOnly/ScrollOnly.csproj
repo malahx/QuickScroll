@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>QuickScroll</RootNamespace>
     <AssemblyName>QuickScroll</AssemblyName>
-    <ReleaseVersion>1.31</ReleaseVersion>
+    <ReleaseVersion>1.32</ReleaseVersion>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <Description>#### QuickScroll
 #### A plugin for Kerbal Space Program
@@ -50,6 +50,9 @@
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\..\lib\1.0.4\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="TrackIRUnity">
+      <HintPath>..\..\lib\1.0.4\TrackIRUnity.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

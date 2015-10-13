@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace QuickScroll {
@@ -28,6 +29,16 @@ namespace QuickScroll {
 			}
 		}
 
+		public static Vector3 GetPosition(Transform trans) {
+			EZCameraSettings _uiCam = UIManager.instance.uiCameras.FirstOrDefault(c => (c.mask & (1 << trans.gameObject.layer)) != 0);
+			if (_uiCam != null) {
+				Vector3 _screenPos = _uiCam.camera.WorldToScreenPoint (trans.position);
+				_screenPos.y = Screen.height - _screenPos.y;
+				return _screenPos;
+			}
+			return Vector3d.zero;
+		}
+
 		private static bool isOverArrow {
 			get {
 				Rect _rect = new Rect (0, 0, 60, 24);
@@ -37,13 +48,12 @@ namespace QuickScroll {
 
 		private static bool isOverParts {
 			get {
-				Vector3 _position = UIManager.instance.uiCameras [0].camera.WorldToScreenPoint (EditorPartList.Instance.transformTopLeft.position);
+				Vector3 _TopLeft = GetPosition (EditorPartList.Instance.transformTopLeft);
+				float _partsPanelTrueWidth = EditorPanels.Instance.partsPanelWidth - PartCategorizer.Instance.scrollListMain.scrollList.viewableArea.x - PartCategorizer.Instance.scrollListSub.scrollList.viewableArea.x;
 				Rect _rect = new Rect ();
-				_rect.x = _position.x;
-				_rect.y = EditorPartList.Instance.footerTransform.position.x;
-				_rect.width = EditorPanels.Instance.partsPanelWidth - 78;
-				// I like to scroll on the subassemblyHeight ;)
-				//_rect.height = Screen.height - _rect.y - EditorPartList.Instance.footerHeight - EditorPartList.Instance.subassemblyHeight - EditorPartList.Instance.subassemblySeperation;
+				_rect.x = _TopLeft.x;
+				_rect.y = _TopLeft.y;
+				_rect.width = _partsPanelTrueWidth;
 				_rect.height = Screen.height - _rect.y - EditorPartList.Instance.footerHeight;
 				return _rect.Contains(Mouse.screenPos);
 			}
@@ -66,6 +76,15 @@ namespace QuickScroll {
 				}
 				Rect _rect = new Rect (0, 25, PartCategorizer.Instance.scrollListMain.scrollList.viewableArea.x, PartCategorizer.Instance.scrollListMain.scrollList.viewableArea.y);
 				return _rect.Contains(Mouse.screenPos);
+			}
+		}
+
+		private static bool isPartScrollable {
+			get {
+				if (!PartListTooltips.fetch.displayTooltip) {
+					return true;
+				}
+				return InputLockManager.IsUnlocked(ControlTypes.EDITOR_ICON_PICK);
 			}
 		}
 
@@ -102,7 +121,9 @@ namespace QuickScroll {
 			} else if (isOverCategories || (_ModKeyCategoryWheel && isOverParts)) {
 				QCategory.SelectPartCategory (_scroll > 0);
 			} else if (isOverParts) {
-				QCategory.SelectPartPage (_scroll > 0);
+				if (isPartScrollable) {
+					QCategory.SelectPartPage (_scroll > 0);
+				}
 			}
 		}
 	}
