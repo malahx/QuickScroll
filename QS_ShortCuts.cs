@@ -16,19 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 */
 
+using KSP.UI.Screens;
 using System;
 using UnityEngine;
 
 namespace QuickScroll {
 	public class QShortCuts : QKey {
-		#if GUI
 		internal static void Awake() {
 			RectSetKey = new Rect ((Screen.width - 300) / 2, (Screen.height - 100) / 2, 300, 100);
 		}
-		#endif
 
 		internal static void Update() {
-			#if GUI
 			if (SetKey != Key.None) {
 				if (Event.current.isKey) {
 					KeyCode _key = Event.current.keyCode;
@@ -41,11 +39,9 @@ namespace QuickScroll {
 				}
 				return;
 			}
-			#endif
 			if (EditorLogic.fetch.editorScreen != EditorScreen.Parts) {
 				return;
 			}
-			#if SHORTCUT
 			if (!QSettings.Instance.EnableKeyShortCut) {
 				return;
 			}
@@ -67,44 +63,41 @@ namespace QuickScroll {
 			if (Input.GetKeyDown (QSettings.Instance.KeyCategoryNext)) {
 				QCategory.SelectPartCategory (false);
 			}
-			if (Input.GetKeyDown (QSettings.Instance.KeyPagePrevious)) {
+			/*if (Input.GetKeyDown (QSettings.Instance.KeyPagePrevious)) {
 				QCategory.SelectPartPage (true);
 			}
 			if (Input.GetKeyDown (QSettings.Instance.KeyPageNext)) {
 				QCategory.SelectPartPage (false);
-			}
+			}*/
 			if (Input.GetKeyDown (QSettings.Instance.KeyPods)) {
-				QCategory.ForceSelectTab (0);
+				PartCategorizer.SetPanel_FunctionPods();
 			}
 			if (Input.GetKeyDown (QSettings.Instance.KeyFuelTanks)) {
-				QCategory.ForceSelectTab (1);
+				PartCategorizer.SetPanel_FunctionFuelTank();
 			}
 			if (Input.GetKeyDown (QSettings.Instance.KeyEngines)) {
-				QCategory.ForceSelectTab (2);
+				PartCategorizer.SetPanel_FunctionEngine();
 			}
 			if (Input.GetKeyDown (QSettings.Instance.KeyCommandNControl)) {
-				QCategory.ForceSelectTab (3);
+				PartCategorizer.SetPanel_FunctionControl();
 			}
 			if (Input.GetKeyDown (QSettings.Instance.KeyStructural)) {
-				QCategory.ForceSelectTab (4);
+				PartCategorizer.SetPanel_FunctionStructural();
 			}
 			if (Input.GetKeyDown (QSettings.Instance.KeyAerodynamics)) {
-				QCategory.ForceSelectTab (5);
+				PartCategorizer.SetPanel_FunctionAero();
 			}
 			if (Input.GetKeyDown (QSettings.Instance.KeyUtility)) {
-				QCategory.ForceSelectTab (6);
+				PartCategorizer.SetPanel_FunctionUtility();
 			}
 			if (Input.GetKeyDown (QSettings.Instance.KeySciences)) {
-				QCategory.ForceSelectTab (7);
+				PartCategorizer.SetPanel_FunctionScience();
 			}
-			#endif
 		}
-		#if GUI
 		internal static void OnGUI() {
 			if (SetKey != Key.None) {
 				RectSetKey = GUILayout.Window (1545146, RectSetKey, DrawSetKey, string.Format ("Set Key: {0}", GetText (SetKey)), GUILayout.Width (RectSetKey.width), GUILayout.ExpandHeight (true));
 			}
 		}
-		#endif
 	}
 }

@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 */
 
+using KSP.UI.Screens;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -44,7 +45,7 @@ namespace QuickScroll {
 				return;
 			}
 			QGUI.ShowSettings ();
-			QuickScroll.Warning ("QStockToolbar.OnTrue", true);
+			QuickScroll.Log ("OnTrue", "QStockToolbar");
 		}
 
 		private void OnFalse () {
@@ -52,7 +53,7 @@ namespace QuickScroll {
 				return;
 			}
 			QGUI.HideSettings ();
-			QuickScroll.Warning ("QStockToolbar.OnFalse", true);
+			QuickScroll.Log ("OnFalse", "QStockToolbar");
 		}
 
 		private void OnHover () {
@@ -60,7 +61,7 @@ namespace QuickScroll {
 				return;
 			}
 			QGUI.ShowSettings ();
-			QuickScroll.Warning ("QStockToolbar.OnHover", true);
+			QuickScroll.Log ("OnHover", "QStockToolbar");
 		}
 
 		private void OnHoverOut () {
@@ -70,7 +71,7 @@ namespace QuickScroll {
 			if (!isTrue && !isHovering) {
 				QGUI.HideSettings ();
 			}
-			QuickScroll.Warning ("QStockToolbar.OnHoverOut", true);
+			QuickScroll.Log ("OnHoverOut", "QStockToolbar");
 		}
 			
 		private Texture2D GetTexture {
@@ -100,7 +101,7 @@ namespace QuickScroll {
 				}
 				Rect _rect = QGUI.RectSettings;
 				_rect.height += 3;
-				return appLauncherButton.toggleButton.IsHovering || _rect.Contains (Mouse.screenPos);
+				return appLauncherButton.IsHovering || _rect.Contains (Mouse.screenPos);
 			}
 		}
 
@@ -109,7 +110,7 @@ namespace QuickScroll {
 				if (appLauncherButton == null) {
 					return false;
 				}
-				return appLauncherButton.State == RUIToggleButton.ButtonState.TRUE;
+				return appLauncherButton.toggleButton.CurrentState == KSP.UI.UIRadioButton.State.True;
 			}
 		}
 
@@ -118,7 +119,7 @@ namespace QuickScroll {
 				if (appLauncherButton == null) {
 					return false;
 				}
-				return appLauncherButton.State == RUIToggleButton.ButtonState.FALSE;
+				return appLauncherButton.toggleButton.CurrentState == KSP.UI.UIRadioButton.State.False;
 			}
 		}
 
@@ -137,7 +138,7 @@ namespace QuickScroll {
 			GameEvents.onGUIApplicationLauncherReady.Add (AppLauncherReady);
 			GameEvents.onGUIApplicationLauncherDestroyed.Add (AppLauncherDestroyed);
 			GameEvents.onLevelWasLoadedGUIReady.Add (AppLauncherDestroyed);
-			QuickScroll.Warning ("QStockToolbar.Awake", true);
+			QuickScroll.Log ("Awake", "QStockToolbar");
 		}
 			
 		private void AppLauncherReady() {
@@ -146,7 +147,7 @@ namespace QuickScroll {
 				return;
 			}
 			Init ();
-			QuickScroll.Warning ("QStockToolbar.AppLauncherReady", true);
+			QuickScroll.Log ("AppLauncherReady", "QStockToolbar");
 		}
 
 		private void AppLauncherDestroyed(GameScenes gameScene) {
@@ -154,19 +155,19 @@ namespace QuickScroll {
 				return;
 			}
 			Destroy ();
-			QuickScroll.Warning ("QStockToolbar.onLevelWasLoadedGUIReady", true);
+			QuickScroll.Log ("onLevelWasLoadedGUIReady", "QStockToolbar");
 		}
 		
 		private void AppLauncherDestroyed() {
 			Destroy ();
-			QuickScroll.Warning ("QStockToolbar.onGUIApplicationLauncherDestroyed", true);
+			QuickScroll.Log ("onGUIApplicationLauncherDestroyed", "QStockToolbar");
 		}
 
 		private void OnDestroy() {
 			GameEvents.onGUIApplicationLauncherReady.Remove (AppLauncherReady);
 			GameEvents.onGUIApplicationLauncherDestroyed.Remove (AppLauncherDestroyed);
 			GameEvents.onLevelWasLoadedGUIReady.Remove (AppLauncherDestroyed);
-			QuickScroll.Warning ("QStockToolbar.OnDestroy", true);
+			QuickScroll.Log ("OnDestroy", "QStockToolbar");
 		}
 
 		private void Init() {
@@ -174,9 +175,9 @@ namespace QuickScroll {
 				return;
 			}
 			if (appLauncherButton == null) {
-				appLauncherButton = ApplicationLauncher.Instance.AddModApplication (new RUIToggleButton.OnTrue (this.OnTrue), new RUIToggleButton.OnFalse (this.OnFalse), new RUIToggleButton.OnHover (this.OnHover), new RUIToggleButton.OnHoverOut (this.OnHoverOut), null, null, AppScenes, GetTexture);
+				appLauncherButton = ApplicationLauncher.Instance.AddModApplication (OnTrue, OnFalse, OnHover, OnHoverOut, null, null, AppScenes, GetTexture);
 			}
-			QuickScroll.Warning ("QStockToolbar.Init", true);
+			QuickScroll.Log ("Init", "QStockToolbar");
 		}
 
 		private void Destroy() {
@@ -184,7 +185,7 @@ namespace QuickScroll {
 				ApplicationLauncher.Instance.RemoveModApplication (appLauncherButton);
 				appLauncherButton = null;
 			}
-			QuickScroll.Warning ("QStockToolbar.Destroy", true);
+			QuickScroll.Log ("Destroy", "QStockToolbar");
 		}
 
 		internal void Set(bool SetTrue, bool force = false) {
@@ -193,16 +194,16 @@ namespace QuickScroll {
 			}
 			if (appLauncherButton != null) {
 				if (SetTrue) {
-					if (appLauncherButton.State == RUIToggleButton.ButtonState.FALSE) {
+					if (isFalse) {
 						appLauncherButton.SetTrue (force);
 					}
 				} else {
-					if (appLauncherButton.State == RUIToggleButton.ButtonState.TRUE) {
+					if (isTrue) {
 						appLauncherButton.SetFalse (force);
 					}
 				}
 			}
-			QuickScroll.Warning ("QStockToolbar.Set", true);
+			QuickScroll.Log ("Set", "QStockToolbar");
 		}
 
 		internal void Reset() {
@@ -215,7 +216,7 @@ namespace QuickScroll {
 			if (Enabled) {
 				Init ();
 			}
-			QuickScroll.Warning ("QStockToolbar.Reset", true);
+			QuickScroll.Log ("Reset", "QStockToolbar");
 		}
 	}
 }

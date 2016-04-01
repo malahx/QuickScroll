@@ -16,13 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 */
 
+using KSP.UI;
+using KSP.UI.Screens;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace QuickScroll {
 
-	public partial class QScroll : MonoBehaviour {
+	public class QScroll {
 		private static bool isSimple {
 			get {
 				return EditorLogic.Mode == EditorLogic.EditorModes.SIMPLE;
@@ -30,13 +34,49 @@ namespace QuickScroll {
 		}
 
 		public static Vector3 GetPosition(Transform trans) {
-			EZCameraSettings _uiCam = UIManager.instance.uiCameras.FirstOrDefault(c => (c.mask & (1 << trans.gameObject.layer)) != 0);
+			Camera _uiCam = UIMainCamera.Camera;
 			if (_uiCam != null) {
-				Vector3 _screenPos = _uiCam.camera.WorldToScreenPoint (trans.position);
+				Vector3 _screenPos = _uiCam.WorldToScreenPoint (trans.position);
 				_screenPos.y = Screen.height - _screenPos.y;
 				return _screenPos;
 			}
 			return Vector3d.zero;
+		}
+
+		public static Vector3 GetlocalPosition(Transform trans) {
+			Camera _uiCam = UIMainCamera.Camera;
+			if (_uiCam != null) {
+				Vector3 _screenPos = _uiCam.WorldToScreenPoint (trans.localPosition);
+				_screenPos.y = Screen.height - _screenPos.y;
+				return _screenPos;
+			}
+			return Vector3d.zero;
+		}
+
+		public static Vector3 GetVPosition(Vector3 pos) {
+			Camera _uiCam = UIMainCamera.Camera;
+			if (_uiCam != null) {
+				Vector3 _screenPos = _uiCam.WorldToScreenPoint (pos);
+				_screenPos.y = Screen.height - _screenPos.y;
+				return _screenPos;
+			}
+			return Vector3d.zero;
+		}
+			
+		public static Rect ListScreenPos(UIList list) {
+			Vector3 _position = GetPosition (list.ListAnchor);
+			Vector3 _localPosition = GetlocalPosition (list.ListAnchor);
+			Rect _rect = new Rect (0, _position.y, _position.x + 10, _localPosition.x);
+			return _rect;
+		}
+
+		public static Rect partListScreenPos {
+			get {
+				Vector3 _position = QScroll.GetPosition (EditorPartList.Instance.partListScrollRect.transform);
+				float _height = QScroll.GetVPosition (EditorPartList.Instance.partListScrollRect.content.anchoredPosition3D).x - _position.y;
+				float _width = EditorPartList.Instance.partListScrollRect.content.rect.width;
+				return new Rect (_position.x, _position.y, _width, _height);
+			}
 		}
 
 		private static bool isOverArrow {
@@ -48,24 +88,18 @@ namespace QuickScroll {
 
 		private static bool isOverParts {
 			get {
-				Vector3 _TopLeft = GetPosition (EditorPartList.Instance.transformTopLeft);
-				float _partsPanelTrueWidth = EditorPanels.Instance.partsPanelWidth - PartCategorizer.Instance.scrollListMain.scrollList.viewableArea.x - PartCategorizer.Instance.scrollListSub.scrollList.viewableArea.x;
-				Rect _rect = new Rect ();
-				_rect.x = _TopLeft.x;
-				_rect.y = _TopLeft.y;
-				_rect.width = _partsPanelTrueWidth;
-				_rect.height = Screen.height - _rect.y - EditorPartList.Instance.footerHeight;
-				return _rect.Contains(Mouse.screenPos);
+				return partListScreenPos.Contains(Mouse.screenPos);
 			}
 		}
 
 		private static bool isOverCategories {
 			get {
-				Rect _rect = new Rect (0, 25, PartCategorizer.Instance.scrollListSub.scrollList.viewableArea.x, PartCategorizer.Instance.scrollListSub.scrollList.viewableArea.y);
+				Rect _cat = QScroll.ListScreenPos (PartCategorizer.Instance.scrollListSub);
 				if (!isSimple) {
-					_rect.x = _rect.x + PartCategorizer.Instance.scrollListMain.scrollList.viewableArea.x;
+					Rect _filter = QScroll.ListScreenPos (PartCategorizer.Instance.scrollListMain);
+					_cat.x = _filter.width;
 				}
-				return _rect.Contains(Mouse.screenPos);
+				return _cat.Contains (Mouse.screenPos);
 			}
 		}
 
@@ -74,23 +108,81 @@ namespace QuickScroll {
 				if (isSimple) {
 					return false;
 				}
-				Rect _rect = new Rect (0, 25, PartCategorizer.Instance.scrollListMain.scrollList.viewableArea.x, PartCategorizer.Instance.scrollListMain.scrollList.viewableArea.y);
-				return _rect.Contains(Mouse.screenPos);
+				return QScroll.ListScreenPos(PartCategorizer.Instance.scrollListMain).Contains(Mouse.screenPos);;
 			}
 		}
 
-		private static bool isPartScrollable {
+		//Too many private in EditorPartList ...
+		//private List<AvailablePart> ;
+		//private EditorPartList.State ;
+		public static int indexParts {
 			get {
-				if (!PartListTooltips.fetch.displayTooltip) {
-					return true;
+				List<AvailablePart> _aParts = new List<AvailablePart> ();
+				if (!string.IsNullOrEmpty(PartCategorizer.Instance.searchField.text) || PartCategorizer.Instance.searchField.isFocused) {
+					_aParts = EditorPartList.Instance.ExcludeFilters.GetFilteredList (PartLoader.LoadedPartsList);
+					_aParts = _aParts.Where (EditorPartList.Instance.AmountAvailableFilter.FilterCriteria).ToList<AvailablePart> ();
+					_aParts = _aParts.Where (EditorPartList.Instance.SearchFilterParts.FilterCriteria).ToList<AvailablePart> ();
+				} else {
+					switch (QCategory.CurrentCategory.displayType) {
+					case EditorPartList.State.PartsList:
+						_aParts = EditorPartList.Instance.ExcludeFilters.GetFilteredList (PartLoader.LoadedPartsList);
+						_aParts = _aParts.Where (EditorPartList.Instance.AmountAvailableFilter.FilterCriteria).ToList<AvailablePart> ();
+						_aParts = EditorPartList.Instance.CategorizerFilters.GetFilteredList (_aParts);
+						break;
+					case EditorPartList.State.CustomPartList:
+						_aParts = EditorPartList.Instance.ExcludeFilters.GetFilteredList (PartLoader.LoadedPartsList);
+						_aParts = _aParts.Where (EditorPartList.Instance.AmountAvailableFilter.FilterCriteria).ToList<AvailablePart> ();
+						_aParts = EditorPartList.Instance.CategorizerFilters.GetFilteredList (_aParts);
+						break;
+					case EditorPartList.State.SubassemblyList:
+						break;
+					case EditorPartList.State.Nothing:
+						break;
+					case EditorPartList.State.PartSearch:
+						_aParts = EditorPartList.Instance.ExcludeFilters.GetFilteredList (PartLoader.LoadedPartsList);
+						_aParts = _aParts.Where (EditorPartList.Instance.AmountAvailableFilter.FilterCriteria).ToList<AvailablePart> ();
+						_aParts = _aParts.Where (EditorPartList.Instance.SearchFilterParts.FilterCriteria).ToList<AvailablePart> ();
+						break;
+					}
 				}
-				return InputLockManager.IsUnlocked(ControlTypes.EDITOR_ICON_PICK);
+				return _aParts.Count;
+			}
+		}
+
+		public static int partsPages {
+			get {
+				int _iconHeight = 71;
+				float _partsOnOnePage = 3 * QScroll.partListScreenPos.height / _iconHeight;
+				int _pages = (int)Math.Ceiling((QScroll.indexParts / _partsOnOnePage));
+				return _pages;
 			}
 		}
 
 		internal static void Update() {
 			if (EditorLogic.fetch.editorScreen != EditorScreen.Parts || !QSettings.Instance.EnableWheelScroll || !EditorPanels.Instance.IsMouseOver ()) {
 				return;
+			}
+			if (EditorPartList.Instance != null) {
+				if (EditorPartList.Instance.partListScrollRect.vertical && EditorPartList.Instance.partListScrollRect.verticalScrollbar.IsInteractable()) {
+					if (string.IsNullOrEmpty (PartCategorizer.Instance.searchField.text) && !PartCategorizer.Instance.searchField.isFocused) {
+						if (indexParts > 0) {
+							int _partsPages = partsPages;
+							if (EditorPartList.Instance.partListScrollRect.verticalScrollbar.numberOfSteps != _partsPages) {
+								EditorPartList.Instance.partListScrollRect.verticalScrollbar.numberOfSteps = _partsPages;
+								EditorPartList.Instance.partListScrollRect.scrollSensitivity = _partsPages * 150f;
+								QuickScroll.Log ("Set pages: " + _partsPages, "QScroll");
+								QuickScroll.Log ("\tscrollSensitivity " + _partsPages * 150f, "QScroll");
+							}
+						}
+					}
+					if (PartCategorizer.Instance.searchField.isFocused) {
+						if (EditorPartList.Instance.partListScrollRect.scrollSensitivity != 27f || EditorPartList.Instance.partListScrollRect.verticalScrollbar.numberOfSteps != 0) {
+							EditorPartList.Instance.partListScrollRect.verticalScrollbar.numberOfSteps = 0;
+							EditorPartList.Instance.partListScrollRect.scrollSensitivity = 27f;
+							QuickScroll.Log ("Reset scrollSensitivity and numberOfSteps", "QScroll");
+						}
+					}
+				}
 			}
 			float _scroll = Input.GetAxis ("Mouse ScrollWheel");
 			if (_scroll == 0) {
@@ -106,12 +198,10 @@ namespace QuickScroll {
 			}
 			bool _ModKeyFilterWheel = false;
 			bool _ModKeyCategoryWheel = false;
-			#if SHORTCUT
 			if (QSettings.Instance.EnableWheelShortCut) {
 				_ModKeyFilterWheel = Input.GetKey (QSettings.Instance.ModKeyFilterWheel);
 				_ModKeyCategoryWheel = Input.GetKey (QSettings.Instance.ModKeyCategoryWheel);
 			}
-			#endif
 			bool _ModKeyWheel = _ModKeyFilterWheel || _ModKeyCategoryWheel;
 			if (isOverFilters || (_ModKeyWheel && isOverCategories) || (_ModKeyFilterWheel && isOverParts)) {
 				if (isSimple) {
@@ -120,11 +210,10 @@ namespace QuickScroll {
 				QCategory.SelectPartFilter (_scroll > 0);
 			} else if (isOverCategories || (_ModKeyCategoryWheel && isOverParts)) {
 				QCategory.SelectPartCategory (_scroll > 0);
-			} else if (isOverParts) {
-				if (isPartScrollable) {
-					QCategory.SelectPartPage (_scroll > 0);
-				}
-			}
+			} 
+			/*else if (isOverParts && indexParts > 0) {
+				QCategory.PartListTooltipsTWEAK (false);
+			}*/
 		}
 	}
 }

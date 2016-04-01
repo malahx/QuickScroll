@@ -16,9 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>. 
 */
 
+using KSP.UI;
+using KSP.UI.Screens;
+using KSP.UI.Screens.Editor;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 namespace QuickScroll {
 	public class QCategory {
@@ -35,7 +39,14 @@ namespace QuickScroll {
 		// Indiquer quel filtre est sélectionné
 		public static PartCategorizer.Category CurrentFilter {
 			get {
-				return Filters.Find(f => f.button.activeButton.State == RUIToggleButtonTyped.ButtonState.TRUE);
+				return Filters.Find(f => f.button.activeButton.CurrentState == UIRadioButton.State.True);
+			}
+		}
+
+		// Indiquer l'index de la catégorie sélectionnée
+		public static int IndexCurrentFilter {
+			get {
+				return Filters.FindIndex(f => f.button.activeButton.CurrentState == UIRadioButton.State.True);
 			}
 		}
 
@@ -46,10 +57,17 @@ namespace QuickScroll {
 			}
 		}
 
-		// Indiquer quel catégorie est sélectionnée
+		// Indiquer quelle catégorie est sélectionnée
 		public static PartCategorizer.Category CurrentCategory {
 			get {
-				return Categories.Find(f => f.button.activeButton.State == RUIToggleButtonTyped.ButtonState.TRUE);
+				return Categories.Find(f => f.button.activeButton.CurrentState == UIRadioButton.State.True);
+			}
+		}
+
+		// Indiquer l'index de la catégorie sélectionnée
+		public static int IndexCurrentCategory {
+			get {
+				return Categories.FindIndex(f => f.button.activeButton.CurrentState == UIRadioButton.State.True);
 			}
 		}
 
@@ -61,6 +79,13 @@ namespace QuickScroll {
 			index++;
 			return categories[index];
 		}
+		/*public static KSP.UI.UIListItem NextCategory(UIList list, int index) {
+			if (index >= list.Count -1) {
+				index = -1;
+			}
+			index++;
+			return list.GetUilistItemAt(index);
+		}*/
 
 		// Sélectionner le filtre ou la catégorie précédent
 		public static PartCategorizer.Category PrevCategory(List<PartCategorizer.Category> categories, int index) {
@@ -70,120 +95,61 @@ namespace QuickScroll {
 			index--;
 			return categories[index];
 		}
-
-		// Changer de page
-		internal static void SelectPartPage(bool dirScrolling) {
-			if (dirScrolling) {
-				if (!EditorPartList.Instance.prevPage.gameObject.activeSelf) {
-					if (!QSettings.Instance.EnableWheelBlockTopEnd) {
-						while (EditorPartList.Instance.nextPage.gameObject.activeSelf) {
-							EditorPartList.Instance.NextPage ();
-						}
-					}
-					return;
-				}
-				EditorPartList.Instance.PrevPage ();
-			} else {
-				if (!EditorPartList.Instance.nextPage.gameObject.activeSelf) {
-					if (!QSettings.Instance.EnableWheelBlockTopEnd) {
-						while (EditorPartList.Instance.prevPage.gameObject.activeSelf) {
-							EditorPartList.Instance.PrevPage ();
-						}
-					}
-					return;
-				}
-				EditorPartList.Instance.NextPage ();
+		/*public static KSP.UI.UIListItem PrevCategory(UIList list, int index) {
+			if (index <= 0) {
+				index = list.Count;
 			}
-			QuickScroll.Warning ("SelectPartPage " + (dirScrolling ? "PrevPage" : "NextPage"), true);
-			PartListTooltipsTWEAK (false);
-		}
+			index--;
+			return list.GetUilistItemAt(index);
+		}*/
 
 		// Changer de catégorie
 		internal static void SelectPartCategory(bool dirScrolling) {
-			SelectPartCategory (dirScrolling, Categories, CurrentCategory, PartCategorizer.Instance.scrollListSub.scrollList);
+			SelectPartCategory (dirScrolling, Categories, IndexCurrentCategory, PartCategorizer.Instance.scrollListSub);
 		}
 
 		// Changer de filtre
 		internal static void SelectPartFilter(bool dirScrolling) {
-			SelectPartCategory (dirScrolling, Filters, CurrentFilter, PartCategorizer.Instance.scrollListMain.scrollList);
+			SelectPartCategory (dirScrolling, Filters, IndexCurrentFilter, PartCategorizer.Instance.scrollListMain);
 		}
 
 		// Changer de filtre/catégorie
-		internal static void SelectPartCategory(bool dirScrolling, List<PartCategorizer.Category> categories, PartCategorizer.Category currentCategory, UIScrollList scrollList) {
-			int _index = currentCategory.button.container.Index;
+		internal static void SelectPartCategory(bool dirScrolling, List<PartCategorizer.Category> categories, int index, UIList list) {
 			if (QSettings.Instance.EnableWheelBlockTopEnd) {
-				if (dirScrolling && _index == 0) {
+				if (dirScrolling && index == 0) {
 					return;
 				}
-				if (!dirScrolling && _index == categories.Count - 1) {
+				if (!dirScrolling && index == categories.Count - 1) {
 					return;
 				}
 			}
-			PartCategorizer.Category _category = (dirScrolling ? PrevCategory (categories, _index) : NextCategory (categories, _index));
-			RUIToggleButtonTyped _btn = _category.button.activeButton;
-			_btn.SetTrue (_btn, RUIToggleButtonTyped.ClickType.FORCED, true);
-			ScrollList (dirScrolling, scrollList, _category);
-			QuickScroll.Warning ("SelectPartCategory " + (dirScrolling ? "Prev" : "Next"), true);
-			PartListTooltipsTWEAK (false);
-		}
-
-		// Améliorer le scroll par défaut
-		internal static void ScrollList(bool dirScrolling, UIScrollList scrollList, PartCategorizer.Category category) {
-			int _lastposition = (scrollList.Count +2) * 34;
-			if (_lastposition < scrollList.viewableArea.y) {
-				return;
-			}
-			int _index = category.button.container.Index;
-			float _position = (_index +1) * 34;
-			if (_position > scrollList.viewableArea.y / 2 && _lastposition - _position > scrollList.viewableArea.y / 2) {
-				scrollList.ScrollToItem (_index, 0);
-				return;
-			}
-			if (_position < scrollList.viewableArea.y / 2) {
-				scrollList.ScrollListTo (0f);
-				return;
-			}
-			if (_lastposition - _position < scrollList.viewableArea.y / 2) {
-				scrollList.ScrollListTo (1f);
-				return;
-			}
-		}
-
-		// Selectionner une categorie
-		internal static void ForceSelectTab(int index) {
-			// It doesn't work?
-			//EditorPartList.Instance.ForceSelectTab (category);
-			PartCategorizer.Category _category = Filters[0];
-			RUIToggleButtonTyped _btn = _category.button.activeButton;
-			if (_btn.State == RUIToggleButtonTyped.ButtonState.FALSE) {
-				_btn.SetTrue (_btn, RUIToggleButtonTyped.ClickType.FORCED, true);
-			}
-			_category = Categories[index];
-			_btn = _category.button.activeButton;
-			if (_btn.State == RUIToggleButtonTyped.ButtonState.FALSE) {
-				_btn.SetTrue (_btn, RUIToggleButtonTyped.ClickType.FORCED, true);
-			}
-			QuickScroll.Warning ("ForceSelectTab " + _category.button.categoryName, true);
-			PartListTooltipsTWEAK (false);
+			PartCategorizer.Category _category = (dirScrolling ? PrevCategory (categories, index) : NextCategory (categories, index));
+			UIRadioButton _btn = _category.button.activeButton;
+			_btn.SetState (UIRadioButton.State.True, UIRadioButton.CallType.APPLICATION, null, true);
+			//PartListTooltipsTWEAK (false);
+			QuickScroll.Log ("SelectPartCategory " + (dirScrolling ? "Prev" : "Next"), "QCategory");
 		}
 
 		// Petit tweak
-		internal static void PartListTooltipsTWEAK(bool enable) {
+		/*internal static void PartListTooltipsTWEAK(bool enable) {
+			if (PartListTooltipMasterController.Instance == null) {
+				return;
+			}
 			if (QSettings.Instance.EnableTWEAKPartListTooltips) {
-				PartListTooltips.fetch.enabled = enable;
+				PartListTooltipMasterController.Instance.enabled = enable;
 			} else {
-				PartListTooltips.fetch.enabled = true;
+				PartListTooltipMasterController.Instance.enabled = true;
+				return;
 			}
 			if (!enable) {
-				if (PartListTooltips.fetch.displayTooltip) {
+				if (PartListTooltipMasterController.Instance.currentTooltip != null) {
 					GameEvents.onTooltipDestroyRequested.Fire ();
-					PartListTooltips.fetch.HideTooltip ();
+					PartListTooltipMasterController.Instance.HideTooltip ();
 				}
 			} else {
-				if (PartListTooltips.fetch.partIcon != null) {
-					if (PartListTooltips.fetch.partIcon.MouseOver && !PartListTooltips.fetch.displayTooltip) {
-						PartListTooltips.fetch.ShowTooltip (PartListTooltips.fetch.partIcon, PartListTooltips.fetch.partInfo);
-						PartListTooltips.fetch.PinTooltip ();
+				if (PartListTooltipMasterController.Instance.PartIcon != null) {
+					if (PartListTooltipMasterController.Instance.PartIcon.MouseOver && PartListTooltipMasterController.Instance.currentTooltip == null) {
+						PartListTooltipMasterController.Instance.enabled = true;
 					}
 				}
 			}
@@ -195,14 +161,14 @@ namespace QuickScroll {
 					// TWEAKPartListTooltips
 					if (QSettings.Instance.EnableTWEAKPartListTooltips) {
 						if (Input.GetKeyDown (QSettings.Instance.KeyPartListTooltipsActivate)) {
-							QCategory.PartListTooltipsTWEAK (true);
+							PartListTooltipsTWEAK (true);
 						}
 						if (Input.GetKeyUp (QSettings.Instance.KeyPartListTooltipsDisactivate)) {
-							QCategory.PartListTooltipsTWEAK (false);
+							PartListTooltipsTWEAK (false);
 						}
 					}
 				}
 			}
-		}
+		}*/
 	}
 }

@@ -8,11 +8,10 @@
     <RootNamespace>QuickScroll</RootNamespace>
     <AssemblyName>QuickScroll</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <ReleaseVersion>1.32</ReleaseVersion>
-    <Description>#### QuickScroll
-#### A plugin for Kerbal Space Program
-#### Copyright 2015 Malah
-</Description>
+    <ReleaseVersion>
+    </ReleaseVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,24 +44,11 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\lib\1.0.4\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\lib\1.0.4\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="TrackIRUnity">
-      <HintPath>..\lib\1.0.4\TrackIRUnity.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QS.cs" />
     <Compile Include="QS_Category.cs" />
     <Compile Include="QS_Settings.cs" />
     <Compile Include="ToolbarWrapper.cs" />
-    <Compile Include="QS_Quick.cs" />
     <Compile Include="QS_GUI.cs" />
     <Compile Include="QS_ShortCuts.cs" />
     <Compile Include="QS_Key.cs" />
@@ -88,5 +74,26 @@
     <None Include="Scroll.xcf" />
     <None Include="GameData\QuickScroll\Textures\BlizzyToolBar.dds" />
     <None Include="GameData\QuickScroll\Textures\StockToolBar.dds" />
+    <None Include="install.sh" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\lib\1.1.0.1174\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\lib\1.1.0.1174\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>..\lib\1.1.0.1174\System.dll</HintPath>
+    </Reference>
+    <Reference Include="KSPUtil">
+      <HintPath>..\lib\1.1.0.1174\KSPUtil.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\lib\1.1.0.1174\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\lib\1.1.0.1174\Assembly-CSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

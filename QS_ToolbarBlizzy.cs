@@ -52,7 +52,7 @@ namespace QuickScroll {
 			Button.ToolTip = QuickScroll.MOD + ": Settings";
 			Button.OnClick += (e) => OnClick ();
 			Button.Visibility = new GameScenesVisibility(AppScenes);
-			QuickScroll.Warning ("QBlizzyToolbar.Start", true);
+			QuickScroll.Log ("Start", "QBlizzyToolbar");
 		}
 
 		internal void OnDestroy() {
@@ -61,7 +61,7 @@ namespace QuickScroll {
 			}
 			Button.Destroy ();
 			Button = null;
-			QuickScroll.Warning ("QBlizzyToolbar.OnDestroy", true);
+			QuickScroll.Log ("OnDestroy", "QBlizzyToolbar");
 		}
 
 		internal void Reset() {
@@ -70,7 +70,7 @@ namespace QuickScroll {
 			} else {
 				OnDestroy ();
 			}
-			QuickScroll.Warning ("QBlizzyToolbar.Reset", true);
+			QuickScroll.Log ("Reset", "QBlizzyToolbar");
 		}
 	}
 }

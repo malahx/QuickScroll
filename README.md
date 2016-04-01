@@ -27,7 +27,6 @@ Shortcut:
     - When the mouse is on the categories:
         * Left Shift or Left CTRL + mouse wheel = scroll filters.
     - Switch the default categories with Enter + KeyPad 1, KeyPad 2, KeyPad 3 ...
-	- Previous/next page with Enter + left/right.
 	- Previous/next category Enter + up/down.
 	- Previous/next filter Enter + page up/page down.
 
@@ -46,6 +45,14 @@ Unzip all files. Merge the new QuickScroll folder with the old folder which is i
 Delete the QuickScroll folder in your KSP/GameData folder.
 
 #### Changelog
+
+v2.0.0-pre1 - 2016.04.01
+* New: Added a page scrolling,
+* New: Deleted support of the keyboard shortcut for parts page scrolling,
+* New: Deleted all optional versions of QuickScroll,
+* New: Deleted PartListTooltipsTWEAK (the auto hide of the tooltips),
+* New: Deleted the autofocus on the good category with huge filters (it will use the stock scrolling),
+* Compiled against KSP 1.1.0.1174
 
 v1.32 - 2015.10.14
 * New: Added an option to disable the hovering on the Stock Toolbar,
@@ -107,7 +114,7 @@ v0.10 - 2014.12.21
 
 #### Troubleshooting?
 
-This mod will not work well with PartCatalog, with it, you need to disable the mouse wheel scrolling.
+If you use the search part function with an empty text, when you unfocus the search field, the scrollbar will be locked.
 
 #### Thanks!
 

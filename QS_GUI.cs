@@ -24,21 +24,26 @@ namespace QuickScroll {
 	public class QGUI {
 
 		internal static bool WindowSettings = false;
-		internal static Rect RectSettings = new Rect();
+		private static Rect rectSettings;
+		internal static Rect RectSettings {
+			get {
+				Rect _rect = rectSettings;
+				if (!QSettings.Instance.StockToolBar) {
+					_rect.x = (Screen.width - _rect.width) / 2;
+					_rect.y = (Screen.height - _rect.height) / 2;
+				} else {
+					_rect.x = Screen.width - _rect.width - 75;
+					_rect.y = Screen.height - _rect.height - 40;
+				}
+				return _rect;
+			}
+			set {
+				rectSettings = value;
+			}
+		}
 
 		internal static void Awake() {
 			RectSettings = new Rect (0, 0, 615, 0);
-			RefreshRect ();
-		}
-
-		internal static void RefreshRect() {
-			if (!QSettings.Instance.StockToolBar) {
-				RectSettings.x = (Screen.width - RectSettings.width) / 2;
-				RectSettings.y = (Screen.height - RectSettings.height) / 2;
-				return;
-			}
-			RectSettings.x = Screen.width - RectSettings.width - 75;
-			RectSettings.y = Screen.height - RectSettings.height - 40;
 		}
 
 		private static void Lock(bool activate, ControlTypes Ctrl = ControlTypes.None) {
@@ -60,7 +65,7 @@ namespace QuickScroll {
 			if (!WindowSettings) {
 				Save ();
 			}
-			QuickScroll.Warning ("Settings", true);
+			QuickScroll.Log ("Settings", "QGUI");
 		}
 
 		internal static void Switch(bool set) {
@@ -72,17 +77,17 @@ namespace QuickScroll {
 			WindowSettings = false;
 			Switch (false);
 			Save ();
-			QuickScroll.Warning ("HideSettings", true);
+			QuickScroll.Log ("HideSettings", "QGUI");
 		}
 
 		internal static void ShowSettings() {
 			WindowSettings = true;
 			Lock (true);
-			QuickScroll.Warning ("ShowSettings", true);
+			QuickScroll.Log ("ShowSettings", "QGUI");
 		}
 
 		private static void Save() {
-			QCategory.PartListTooltipsTWEAK (false);
+			//QCategory.PartListTooltipsTWEAK (false);
 			QStockToolbar.Instance.Reset ();
 			QuickScroll.BlizzyToolbar.Reset ();
 			QSettings.Instance.Save ();
@@ -93,7 +98,6 @@ namespace QuickScroll {
 				return;
 			}
 			GUI.skin = HighLogic.Skin;
-			RefreshRect ();
 			if (!QStockToolbar.Instance.isTrue && !QStockToolbar.Instance.isHovering) {
 				HideSettings ();
 				return;
@@ -114,11 +118,11 @@ namespace QuickScroll {
 			bool _enableWheelScroll = GUILayout.Toggle (QSettings.Instance.EnableWheelScroll, "Enable Wheel Scroll", GUILayout.Width (300));
 			bool _enableWheelShortCut = GUILayout.Toggle (QSettings.Instance.EnableWheelShortCut, "Enable Shortcut with Wheel Scroll", GUILayout.Width (300));
 			if (_enableWheelScroll && _enableWheelShortCut != QSettings.Instance.EnableWheelShortCut) {
-				RectSettings.height = 0;
+				rectSettings.height = 0;
 			}
 			if (_enableWheelScroll != QSettings.Instance.EnableWheelScroll) {
 				QSettings.Instance.EnableWheelScroll = _enableWheelScroll;
-				RectSettings.height = 0;
+				rectSettings.height = 0;
 			}
 			if (_enableWheelShortCut != QSettings.Instance.EnableWheelShortCut) {
 				QSettings.Instance.EnableWheelShortCut = _enableWheelShortCut;
@@ -137,9 +141,9 @@ namespace QuickScroll {
 			bool _enableKeyShortCut = GUILayout.Toggle (QSettings.Instance.EnableKeyShortCut, "Enable Keyboard Shortcut", GUILayout.Width (300));
 			if (_enableKeyShortCut != QSettings.Instance.EnableKeyShortCut) {
 				QSettings.Instance.EnableKeyShortCut = _enableKeyShortCut;
-				RectSettings.height = 0;
+				rectSettings.height = 0;
 			}
-			QSettings.Instance.EnableTWEAKPartListTooltips = GUILayout.Toggle (QSettings.Instance.EnableTWEAKPartListTooltips, "Enable the tweak for PartListTooltips", GUILayout.Width (300));
+			//QSettings.Instance.EnableTWEAKPartListTooltips = GUILayout.Toggle (QSettings.Instance.EnableTWEAKPartListTooltips, "Enable the tweak for PartListTooltips", GUILayout.Width (300));
 			GUILayout.EndHorizontal ();
 			GUILayout.Space (5);
 
@@ -148,14 +152,14 @@ namespace QuickScroll {
 			if (QBlizzyToolbar.isAvailable) {
 				QSettings.Instance.BlizzyToolBar = GUILayout.Toggle (QSettings.Instance.BlizzyToolBar, "Use the Blizzy's Toolbar", GUILayout.Width (300));
 			}
-			if (QSettings.Instance.StockToolBar) {
+			/*if (QSettings.Instance.StockToolBar) {
 				if (QBlizzyToolbar.isAvailable) {
 					GUILayout.EndHorizontal ();
 					GUILayout.Space (5);
 					GUILayout.BeginHorizontal ();
 				}
 				QSettings.Instance.StockToolBarHovering = GUILayout.Toggle (QSettings.Instance.StockToolBarHovering, "Enable the Stock Toolbar Hovring", GUILayout.Width (300));
-			}
+			}*/
 			GUILayout.EndHorizontal ();
 			GUILayout.Space (5);
 
@@ -199,12 +203,12 @@ namespace QuickScroll {
 				GUILayout.EndHorizontal ();
 				GUILayout.Space (5);
 
-				GUILayout.BeginHorizontal ();
+				/*GUILayout.BeginHorizontal ();
 				QShortCuts.DrawConfigKey (QShortCuts.Key.PagePrevious);
 				GUILayout.Space (5);
 				QShortCuts.DrawConfigKey (QShortCuts.Key.PageNext);
 				GUILayout.EndHorizontal ();
-				GUILayout.Space (5);
+				GUILayout.Space (5);*/
 
 				GUILayout.BeginHorizontal ();
 				QShortCuts.DrawConfigKey (QShortCuts.Key.Pods);
@@ -237,9 +241,6 @@ namespace QuickScroll {
 				QShortCuts.VerifyKey ();
 				HideSettings ();
 			}
-			GUILayout.BeginHorizontal ();
-			GUILayout.Space (5);
-			GUILayout.EndHorizontal ();
 			GUILayout.EndVertical ();
 		}
 	}

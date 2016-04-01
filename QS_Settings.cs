@@ -27,24 +27,21 @@ namespace QuickScroll {
 
 		private string FileConfig = KSPUtil.ApplicationRootPath + "GameData/" + QuickScroll.MOD + "/Config.txt";
 
-		#if GUI
+		[Persistent] internal bool Debug = true;
+
 		[Persistent] public bool StockToolBar = true;
 		[Persistent] public bool BlizzyToolBar = true;
 		[Persistent] public bool StockToolBarHovering = false;
-		#endif
 
 		[Persistent] internal bool EnableWheelBlockTopEnd = true;
-		[Persistent] internal bool EnableTWEAKPartListTooltips = false;
+		//[Persistent] internal bool EnableTWEAKPartListTooltips = false;
 
 		[Persistent] internal string KeyPartListTooltipsActivate = "mouse 1";
 		[Persistent] internal string KeyPartListTooltipsDisactivate = "mouse 0";
 
-		#if SCROLL
 		[Persistent] internal bool EnableWheelScroll = true;
 		[Persistent] internal bool EnableWheelShortCut = true;
-		#endif
 
-		#if SHORTCUT
 		[Persistent] internal bool EnableKeyShortCut = true;
 
 		[Persistent] internal KeyCode ModKeyFilterWheel 		= QShortCuts.DefaultKey(QKey.Key.ModKeyFilterWheel);
@@ -56,8 +53,8 @@ namespace QuickScroll {
 		[Persistent] internal KeyCode KeyFilterNext 			= QShortCuts.DefaultKey(QKey.Key.FilterNext);
 		[Persistent] internal KeyCode KeyCategoryPrevious 		= QShortCuts.DefaultKey(QKey.Key.CategoryPrevious);
 		[Persistent] internal KeyCode KeyCategoryNext 			= QShortCuts.DefaultKey(QKey.Key.CategoryNext);
-		[Persistent] internal KeyCode KeyPagePrevious 			= QShortCuts.DefaultKey(QKey.Key.PagePrevious);
-		[Persistent] internal KeyCode KeyPageNext 				= QShortCuts.DefaultKey(QKey.Key.PageNext);
+		//[Persistent] internal KeyCode KeyPagePrevious 			= QShortCuts.DefaultKey(QKey.Key.PagePrevious);
+		//[Persistent] internal KeyCode KeyPageNext 				= QShortCuts.DefaultKey(QKey.Key.PageNext);
 		[Persistent] internal KeyCode KeyPods 					= QShortCuts.DefaultKey(QKey.Key.Pods);
 		[Persistent] internal KeyCode KeyFuelTanks 				= QShortCuts.DefaultKey(QKey.Key.FuelTanks);
 		[Persistent] internal KeyCode KeyEngines 				= QShortCuts.DefaultKey(QKey.Key.Engines);
@@ -66,13 +63,12 @@ namespace QuickScroll {
 		[Persistent] internal KeyCode KeyAerodynamics 			= QShortCuts.DefaultKey(QKey.Key.Aerodynamics);
 		[Persistent] internal KeyCode KeyUtility 				= QShortCuts.DefaultKey(QKey.Key.Utility);
 		[Persistent] internal KeyCode KeySciences 				= QShortCuts.DefaultKey(QKey.Key.Sciences);
-		#endif
 
 		// GESTION DE LA CONFIGURATION
 		public void Save() {
 			ConfigNode _temp = ConfigNode.CreateConfigFromObject(this, new ConfigNode());
 			_temp.Save(FileConfig);
-			QuickScroll.Log ("Settings Saved");
+			QuickScroll.Log ("Settings Saved", "QSettings");
 		}
 		public void Load() {
 			if (File.Exists (FileConfig)) {
@@ -82,7 +78,7 @@ namespace QuickScroll {
 				} catch {
 					Save ();
 				}
-				QuickScroll.Log ("Settings Loaded");
+				QuickScroll.Log ("Settings Loaded", "QSettings");
 			} else {
 				Save ();
 			}

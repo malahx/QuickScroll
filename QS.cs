@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Reflection;
 using UnityEngine;
 
 namespace QuickScroll {
@@ -26,10 +26,31 @@ namespace QuickScroll {
 	[KSPAddon(KSPAddon.Startup.EditorAny, false)]
 	public partial class QuickScroll : MonoBehaviour {
 
-		internal static QuickScroll Instance;
-		#if GUI
+		internal readonly static string VERSION = Assembly.GetAssembly(typeof(QuickScroll)).GetName().Version.Major + "." + Assembly.GetAssembly(typeof(QuickScroll)).GetName().Version.Minor + Assembly.GetAssembly(typeof(QuickScroll)).GetName().Version.Build;
+		internal readonly static string MOD = Assembly.GetAssembly(typeof(QuickScroll)).GetName().Name;
+
+		internal static void Log(string String, string Title = null) {
+			if (Title == null) {
+				Title = MOD;
+			} else {
+				Title = string.Format ("{0}({1})", MOD, Title);
+			}
+			if (QSettings.Instance.Debug) {
+				Debug.Log (string.Format ("{0}[{1}]: {2}", Title, VERSION, String));
+			}
+		}
+		internal static void Warning(string String, string Title = null) {
+			if (Title == null) {
+				Title = MOD;
+			} else {
+				Title = string.Format ("{0}({1})", MOD, Title);
+			}
+			Debug.LogWarning (string.Format ("{0}[{1}]: {2}", Title, VERSION, String));
+		}
+
+		public static QuickScroll Instance;
+
 		[KSPField(isPersistant = true)] internal static QBlizzyToolbar BlizzyToolbar;
-		#endif
 
 		// Initialisation des modules
 		private void Awake() {
@@ -39,60 +60,42 @@ namespace QuickScroll {
 				return;
 			}
 			Instance = this;
-			#if GUI
 			if (BlizzyToolbar == null) BlizzyToolbar = new QBlizzyToolbar ();
 			QGUI.Awake ();
 			QShortCuts.Awake ();
-			#endif
-			Warning ("Awake", true);
+			Log ("Awake");
 		}
 
 		// Initialisation des variables
 		private void Start() {
 			QSettings.Instance.Load ();
-			#if GUI
 			BlizzyToolbar.Start ();
-			#endif
-			#if SHORTCUT
 			QShortCuts.VerifyKey ();
-			#endif
-			QCategory.PartListTooltipsTWEAK (false);
-			#if SCROLL
-			PartCategorizer.Instance.scrollListSub.scrollList.scrollWheelFactor = 0;
-			PartCategorizer.Instance.scrollListMain.scrollList.scrollWheelFactor = 0;
-			#endif
-			Warning ("Start", true);
+			//QCategory.PartListTooltipsTWEAK (false);
+			Log ("Start");
 		}
 
-		#if GUI
 		// Arrêter le plugin
 		private void OnDestroy() {
 			BlizzyToolbar.OnDestroy ();
-			Warning ("OnDestroy", true);
+			Log ("OnDestroy");
 		}
-		#endif
 
 		// Gérer les raccourcis
 		private void Update() {
-			#if SHORTCUT
 			QShortCuts.Update ();
-			#endif
-			#if SCROLL
 			QScroll.Update ();
-			#endif
 		}
 
-		private void LateUpdate() {
+		/*private void LateUpdate() {
 			QCategory.PartListTooltipsTWEAK();
-		}
+		}*/
 
-		#if GUI
 		// Gérer l'interface
 		private void OnGUI() {
 			GUI.skin = HighLogic.Skin;
 			QShortCuts.OnGUI ();
 			QGUI.OnGUI ();
 		}
-		#endif
 	}
 }

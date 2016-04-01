@@ -142,10 +142,10 @@ namespace QuickScroll {
 				return QSettings.Instance.KeyCategoryPrevious;
 			case Key.CategoryNext:
 				return QSettings.Instance.KeyCategoryNext;
-			case Key.PagePrevious:
+			/*case Key.PagePrevious:
 				return QSettings.Instance.KeyPagePrevious;
 			case Key.PageNext:
-				return QSettings.Instance.KeyPageNext;
+				return QSettings.Instance.KeyPageNext;*/
 			case Key.Pods:
 				return QSettings.Instance.KeyPods;
 			case Key.FuelTanks:
@@ -170,7 +170,7 @@ namespace QuickScroll {
 			try {
 				Input.GetKey(CurrentKey(key));
 			} catch {
-				QuickScroll.Warning ("Wrong key: " + CurrentKey(key));
+				QuickScroll.Warning ("Wrong key: " + CurrentKey(key),"QKey");
 				SetCurrentKey (key, DefaultKey(key));
 			}
 		}
@@ -206,12 +206,12 @@ namespace QuickScroll {
 			case Key.CategoryNext:
 				QSettings.Instance.KeyCategoryNext = CurrentKey;
 				break;
-			case Key.PagePrevious:
+			/*case Key.PagePrevious:
 				QSettings.Instance.KeyPagePrevious = CurrentKey;
 				break;
 			case Key.PageNext:
 				QSettings.Instance.KeyPageNext = CurrentKey;
-				break;
+				break;*/
 			case Key.Pods:
 				QSettings.Instance.KeyPods = CurrentKey;
 				break;
